@@ -1,0 +1,336 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\lstset{basicstyle=\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue}
+}
+% \usepackage{enumitem}
+\DeclareMathOperator{\A}{\mathbf{A}}
+\DeclareMathOperator{\T}{\mathbf{T}}
+\DeclareMathOperator{\al}{\mathbf{\alpha}}
+\DeclareMathOperator{\Th}{\mathbf{\theta}}
+
+ 
+\title{Project \#1}
+\author{Shao Hua, Huang\\
+ICN5534 - Robotics}
+
+\begin{document}
+\maketitle
+\section{Language and Platform Description}
+\begin{enumerate}
+  \item
+  I use C\texttt{++} to write my program, and use following dependencies.\\
+  If possible, please use linux machine to run my code.
+  \begin{enumerate}
+    \item C\texttt{++} feature is required.
+    \item Eigen: C\texttt{++} template library for linear algebra
+    \item Qt5: Cross-platform software development for embedded and desktop
+  \end{enumerate}
+  \item Intall Dependencies\\
+  Eigen3: \lstinline{sudo apt install libeigen3-dev}\\
+  Qt5: Please refer to \url{https://www.qt.io/download}
+  \item Build and Run
+  \begin{lstlisting}[language=bash]
+mkdir build
+cd build
+cmake ..
+make
+./ project1_main_cli 1 <params>
+or
+./ project1_main_cli 2 <params>
+or
+./ project1_main_gui
+  \end{lstlisting}
+\end{enumerate}
+\section{Program Architecture}
+\begin{enumerate}
+  \item project1.hpp: computation functions
+    \begin{itemize}
+      \item IsValidRange: check if the angle is not NaN and is in valid range
+      \item MakeVector6: make a 6 x 1 vector in Eigen
+      \item MakeA: given $(d_n, a_n, \al_n, \Th_n)$, make matrix $\A_n$
+      \item DoTask1: given $(n, o, a, p)$, compute joint variables
+      \item DoTask2: given joint variables, compute $(n, o, a, p)$ and $(x, y, z, \phi, \Th, \phi)$
+      \item PrintAnswer: print task1 answer for command line interface
+    \end{itemize}
+  \item mainwindow.ui, mainwindow.h, mainwindow.cc: GUI codes\\
+  \item project1\_main\_cli: CLI version of main\\
+  \item project1\_main\_gui: GUI version of main
+  \item The implementation is based on the equations derived below, along with some functions in Eigen library.
+        See some comments in project1.cc
+\end{enumerate}
+\section{Equations Derivation}
+  In lecture, $\A_n =
+  \begin{bmatrix}
+  c_n & -s_nc_{\al_n} &  s_ns_{\al_n} & a_nc_n\\
+  s_n & -c_nc_{\al_n} & -c_ns_{\al_n} & a_ns_n\\
+  0 & s\al_n & c\al_n & d_n\\
+  0 & 0 & 0 & 1
+  \end{bmatrix}$ where $s_n = \sin(n)$ and $c_n = \cos(n)$\\
+  Based on the kinematic table, we have
+  \begin{align*}
+    \A_1 =
+    \begin{bmatrix}
+      c_1 & 0 & -s_1 & a_1c_1\\
+      s_1 & 0 & c_1 & a_1s_1\\
+      0 & -1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_2 =
+    \begin{bmatrix}
+      c_2 & -s_2 & 0 & a_2c_2\\
+      s_2 & c_2 & 0 & a_2s_2\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_3 =
+    \begin{bmatrix}
+      c_3 & -s_3 & 0 & a_3c_3\\
+      s_3 & c_3 & 0 & a_3s_3\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+    \A_4 =
+    \begin{bmatrix}
+      c_4 & 0 & -s_4 & 0\\
+      s_4 & 0 & c_4 & 0\\
+      0 & -1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_5 =
+    \begin{bmatrix}
+      c_5 & 0 & s_5 & 0\\
+      s_5 & 0 & -c_5 & 0\\
+      0 & 1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_6 =
+    \begin{bmatrix}
+      c_6 & -s_6 & 0 & 0\\
+      s_6 & c_6 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  Also calculate inverse of each matrix,\\
+  \begin{align*}
+    \A_1^{-1} =
+    \begin{bmatrix}
+      c_1 & s_1 & 0 & -a_1\\
+      0 & 0 & -1 & 0\\
+      -s_1 & c_1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_2^{-1} =
+    \begin{bmatrix}
+      c_2 & s_2 & 0 & -a_2\\
+      -s_2 & c_2 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_3^{-1} =
+    \begin{bmatrix}
+      c_3 & s_3 & 0 & -a_3\\
+      -s_3 & c_3 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+    \A_4^{-1} =
+    \begin{bmatrix}
+      c_4 & s_4 & 0 & 0\\
+      0 & 0 & -1 & 0\\
+      -s_4 & c_4 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_5^{-1} =
+    \begin{bmatrix}
+      c_5 & s_5 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      s_5 & -c_5 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_6^{-1} =
+    \begin{bmatrix}
+      c_6 & s_6 & 0 & 0\\
+      -s_6 & c_6 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  $\T = \A_1 * \A_2 * \A_3 * \A_4 * \A_5 * \A_6 = 
+  \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$
+  
+\begin{enumerate}
+  \item Calculate $\Th_1$\\
+    $$\A_1^{-1}\T = \A_2\A_3\A_4\A_5\A_6$$
+    \begin{align*}
+      \begin{bmatrix}
+        c_1c_2 & s_1c_2 & -s_2 & -a_1c_2-a_2\\
+        -c_1s_2 & -s_1s_2 & -c_2 & a_1s_2\\
+        -s_1 & c_1 & 0 & 0\\
+        0 & 0 & 0 & 1
+      \end{bmatrix}\T = 
+      \begin{bmatrix}
+        \dots & \dots & \dots & a_3c_{23} + a_2c_2\\
+        \dots & \dots & \dots & a_3s_{23} + a_2s_2\\
+        \dots & \dots & \dots & 0\\
+        0 & 0 & 0 & 1
+      \end{bmatrix}
+    \end{align*}
+    That is,
+    \begin{align} \label{eq:A1}
+      \begin{cases}
+        (c_1p_x + s_1p_y - a_1)c_2 - p_zs_2 = a_2 + a_3c_3\\
+        p_zc_2 + (c_1p_x + s_1p_y - a_1)s_2 = -a_3s_3\\
+        -s_1p_x + c_1p_y = 0
+      \end{cases}
+    \end{align}
+    From third equation of \ref{eq:A1}, we know that
+    $$\Th_1 = \arctan(\frac{p_y}{p_x})$$
+
+  \item Calculate $\Th_3$\\
+    $$\A_3^{-1}\A_2^{-1}\A_1^{-1}\T = \A_4\A_5\A_6$$
+    \begin{align} \label{eq:A3}
+      \begin{bmatrix}
+        c_1c_{23} & s_1c_{23} & -s_{23} & -a_1c_{23} - a_2c_3 - a_3\\
+        -c_1s_{23} & -s_1s_{23} & -c_{23} & a_1s_{23} + a_2s_3\\
+        -s_1 & c_1 & 0 & 0\\
+        0 & 0 & 0 & 1
+      \end{bmatrix}\T = 
+      \begin{bmatrix}
+        \dots & \dots & c_4s_5 & 0\\
+        \dots & \dots & s_4s_5 & 0\\
+        -s_5c_6 & s_5s_6 & \dots & 0\\
+        0 & 0 & 0 & 1
+      \end{bmatrix}
+    \end{align}
+    From the forth column of the right side of \ref{eq:A3}, we get
+    \begin{align} \label{eq:A3_2}
+      \begin{cases}
+        (c_1p_x + s_1p_y - a_1)c_{23} - p_zs_{23} = a_2c_3 + a_3\\
+        p_zc_{23} + (c_1p_x + s_1p_y - a_1)s_{23} = a_2s_3
+      \end{cases}
+    \end{align}
+    Square \ref{eq:A3_2} and sum,
+    $$(c_1p_x + s_1p_y - a_1)^2 + p_z^2 = a_2^2 + a_3^2 + 2a_2a_3c_3$$
+    Therefore,
+    $$\Th_3 = \arccos\left(\frac{(c_1p_x + s_1p_y - a_1)^2 + p_z^2 - a_2^2 - a_3^2}{2a_2a_3c_3}\right)$$
+
+  \item Calculate $\Th_2$\\
+    Let
+    \begin{align*}
+      \begin{cases}
+        r\sin(\phi) = p_z\\
+        r\cos(\phi) = c_1p_x + s_1p_y - a_1
+      \end{cases}
+    \end{align*} where
+    $$\phi = \arctan(\frac{p_z}{c_1p_x + s_1p_y - a_1})$$\\
+    From first two equations of \ref{eq:A1}, we have
+    \begin{align*}
+      \begin{cases}
+        r\cos(\phi)c_2 - r\sin(\phi)s_2 = a_2 + a_3c_3\\
+        r\sin(\phi)c_2 + r\cos(\phi)s_2 = -a_3s_3
+      \end{cases}
+      \Rightarrow
+      \begin{cases}
+        r\cos(\phi + \Th_2) = a_2 + a_3c_3\\
+        r\sin(\phi + \Th_2) = -a_3s_3
+      \end{cases}
+    \end{align*}
+    Therefore,
+    \begin{align*}
+      \Th_2 & = \phi - \Th_3\\
+            & = \arctan(\frac{-a_3s_3}{a_2 + a_3c_3}) - \arctan(\frac{p_z}{c_1p_x + s_1p_y - a_1})
+    \end{align*}
+
+  \item Calculate $\Th_4$\\
+    From third column of the right side of \ref{eq:A3},
+    \begin{align*}
+      \begin{cases}
+        (c_1a_x + s_1a_y)c_{23} - a_zs_{23} = c_4s_5\\
+        a_zc_{23} + (c_1a_x + s_1a_y)s_{23}= -s_4s_5
+      \end{cases}
+    \end{align*}
+    After deviding, we get
+    $$\Th_4 = \arctan\left(\frac{a_zc_{23} + (c_1a_x + s_1a_y)s_{23}}{a_zs_{23} - (c_1a_x + s_1a_y)c_{23}}\right)$$
+
+  \item Calculate $\Th_5$\\
+    $$\A_4^{-1}\A_3^{-1}\A_2^{-1}\A_1^{-1}\T = \A_5\A_6$$
+    \begin{align} \label{eq:A4}
+      \begin{bmatrix}
+        c_1c_{234} & s_1c_{234} & -s_{234} & \dots\\
+        s_1 & -c_1 & 0 & \dots\\
+        -c_1s_{234} & -s_1s_{234} & -c_{234} & \dots\\
+        0 & 0 & 0 & 1
+      \end{bmatrix}\T = 
+      \begin{bmatrix}
+        \dots & \dots & s_5 & 0\\
+        \dots & \dots & -c_5 & 0\\
+        \dots & \dots & 0 & 0\\
+        0 & 0 & 0 & 1
+      \end{bmatrix}
+    \end{align}
+    From third column of the right side of \ref{eq:A4},
+    \begin{align*}
+      \begin{cases}
+        (c_1a_x + s_1a_y)c_{234} - a_zs_{234} = s_5\\
+        s_1a_x - c_1a_y = -c_5
+      \end{cases}
+    \end{align*}
+    Therefore,
+    $$\Th_5 = \arctan\left(\frac{(c_1a_x + s_1a_y)c_{234} - a_zs_{234}}{-s_1a_x + c_1a_y}\right)$$
+
+  \item Calculate $\Th_6$\\
+    From third row of the right side of \ref{eq:A3},
+    \begin{align*}
+      \begin{cases}
+        -s_1n_x + c_1n_y = -s_5c_6\\
+        -s_1o_x + c_1o_y = s_5s_6
+      \end{cases}
+    \end{align*}
+    Therefore,
+    $$\Th_6 = \arctan(\frac{s_1o_x - c_1o_y}{-s_1n_x + c_1n_y})$$
+
+\end{enumerate}
+\section{Difference Between Algebra and Geometry Approach}
+\begin{enumerate}
+  \item Algreba Approach\\
+    pros:
+      \begin{itemize}
+        \item equation support, rarely wrong
+        \item all solutions provided
+      \end{itemize}
+    cons:
+      \begin{itemize}
+        \item complex computation
+        \item not intuitive
+        \item need to check validity of each angle
+      \end{itemize}
+  \item Geometry Approach\\
+    pros:
+      \begin{itemize}
+        \item intuitive
+        \item simple computation
+      \end{itemize}
+    cons:
+      \begin{itemize}
+        \item need to think more for complicate robots
+        \item if not consider well, the result may be wrong
+      \end{itemize}
+\end{enumerate}
+\end{document}

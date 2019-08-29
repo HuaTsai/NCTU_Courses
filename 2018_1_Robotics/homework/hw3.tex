@@ -1,0 +1,543 @@
+\documentclass[12pt]{article}
+\usepackage[margin=0.7in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\lstset{basicstyle=\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue}
+}
+% \usepackage{enumitem}
+\DeclareMathOperator{\A}{\mathbf{A}}
+\DeclareMathOperator{\T}{\mathbf{T}}
+\DeclareMathOperator{\J}{\mathbf{J}}
+\DeclareMathOperator{\G}{\mathbf{G}}
+\DeclareMathOperator{\LL}{\mathbf{L}}
+\DeclareMathOperator{\M}{\mathbf{M}}
+\DeclareMathOperator{\N}{\mathbf{N}}
+\DeclareMathOperator{\p}{\mathbf{P}}
+\DeclareMathOperator{\Q}{\mathbf{Q}}
+\DeclareMathOperator{\R}{\mathbf{R}}
+\DeclareMathOperator{\s}{\mathbf{S}}
+\DeclareMathOperator{\W}{\mathbf{W}}
+\DeclareMathOperator{\al}{\mathbf{\alpha}}
+\DeclareMathOperator{\Th}{\mathbf{\theta}}
+ 
+\title{Homework \#3}
+\author{Shao Hua, Huang\\
+ICN5534 - Robotics}
+
+\begin{document}
+\maketitle
+\section{R.Paul's methods: Jacobian solution}
+  \begin{table}[h]
+    \centering
+    \begin{tabular}[l]{ccccc}    
+      \hline
+      Joint & $\Th$ & $d$ & $a$ & $\al$ \\\hline
+      1 & $\Th_1$ & $0$ & $0$ & $-90^\circ$ \\\hline
+      2 & $\Th_2$ & $0$ & $a_2$ & $0^\circ$ \\\hline
+      3 & $\Th_3$ & $d_3$ & $a_3$ & $90^\circ$ \\\hline
+      4 & $\Th_4$ & $d_4$ & $0$ & $-90^\circ$ \\\hline
+      5 & $\Th_5$ & $0$ & $0$ & $90^\circ$ \\\hline
+      6 & $\Th_6$ & $0$ & $0$ & $0^\circ$ \\\hline
+    \end{tabular}\\
+    \caption{PUMA 560 kinematic table}\label{table1}
+  \end{table}
+  In lecture, $\A_n =
+  \begin{bmatrix}
+  c_n & -s_nc_{\al_n} &  s_ns_{\al_n} & a_nc_n\\
+  s_n & -c_nc_{\al_n} & -c_ns_{\al_n} & a_ns_n\\
+  0 & s\al_n & c\al_n & d_n\\
+  0 & 0 & 0 & 1
+  \end{bmatrix}$ where $s_n = \sin(n)$ and $c_n = \cos(n)$\\
+  Based on Table \ref{table1}, we have
+  \begin{align*}
+    \A_1 =
+    \begin{bmatrix}
+      c_1 & 0 & -s_1 & 0\\
+      s_1 & 0 & c_1 & 0\\
+      0 & -1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_2 =
+    \begin{bmatrix}
+      c_2 & -s_2 & 0 & c_2a_2\\
+      s_2 & c_2 & 0 & s_2a_2\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_3 =
+    \begin{bmatrix}
+      c_3 & 0 & s_3 & c_3a_3\\
+      s_3 & 0 & -c_3 & s_3a_3\\
+      0 & 1 & 0 & d_3\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+    \A_4 =
+    \begin{bmatrix}
+      c_4 & 0 & -s_4 & 0\\
+      s_4 & 0 & c_4 & 0\\
+      0 & -1 & 0 & d_4\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_5 =
+    \begin{bmatrix}
+      c_5 & 0 & s_5 & 0\\
+      s_5 & 0 & -c_5 & 0\\
+      0 & 1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_6 =
+    \begin{bmatrix}
+      c_6 & -s_6 & 0 & 0\\
+      s_6 & c_6 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  Also calculate inverse of each matrix,\\
+  \begin{align*}
+    \A_1^{-1} =
+    \begin{bmatrix}
+      c_1 & s_1 & 0 & 0\\
+      0 & 0 & -1 & 0\\
+      -s_1 & c_1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_2^{-1} =
+    \begin{bmatrix}
+      c_2 & s_2 & 0 & -a_2\\
+      -s_2 & c_2 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_3^{-1} =
+    \begin{bmatrix}
+      c_3 & s_3 & 0 & -a_3\\
+      0 & 0 & 1 & -d_3\\
+      s_3 & -c_3 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+    \A_4^{-1} =
+    \begin{bmatrix}
+      c_4 & s_4 & 0 & 0\\
+      0 & 0 & -1 & d_4\\
+      -s_4 & c_4 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_5^{-1} =
+    \begin{bmatrix}
+      c_5 & s_5 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      s_5 & -c_5 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix},
+    \A_6^{-1} =
+    \begin{bmatrix}
+      c_6 & s_6 & 0 & 0\\
+      -s_6 & c_6 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  Then,
+  \begin{align*}
+    ^{5}\T & = \A_5^{-1}\A_4^{-1}\A_3^{-1}\A_2^{-1}\A_1^{-1}\T\\
+    & = \A_6\\
+    & = 
+    \begin{bmatrix}
+      c_6 & -s_6 & 0 & 0\\
+      s_6 & c_6 & 0 & 0\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+  ^{4}\T & = \A_4^{-1}\A_3^{-1}\A_2^{-1}\A_1^{-1}\T\\
+    & = \A_5\A_6\\
+    & =
+    \begin{bmatrix}
+      c_5 & 0 & s_5 & 0\\
+      s_5 & 0 & -c_5 & 0\\
+      0 & 1 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix} * \A_6\\
+    & =
+    \begin{bmatrix}
+      c_5c_6 & -c_5s_6 & s_5 & 0\\
+      s_5c_6 & -s_5s_6 & -c_5 & 0\\
+      s_6 & c_6 & 0 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+  ^{3}\T & = \A_3^{-1}\A_2^{-1}\A_1^{-1}\T\\
+    & = \A_4\A_5\A_6\\
+    & =
+    \begin{bmatrix}
+      c_4 & 0 & -s_4 & 0\\
+      s_4 & 0 & c_4 & 0\\
+      0 & -1 & 0 & d_4\\
+      0 & 0 & 0 & 1
+    \end{bmatrix} * \A_5\A_6\\
+    & =
+    \begin{bmatrix}
+      c_4c_5c_6-s_4s_6 & -c_4c_5s_6-s_4c_6 & c_4s_5 & 0\\
+      s_4c_5c_6+c_4s_6 & -s_4c_5s_6+c_4c_6 & s_4s_5 & 0\\
+      -s_5c_6 & s_5s_6 & c_5 & d_4\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+  ^{2}\T & = \A_2^{-1}\A_1^{-1}\T\\
+    & = \A_3\A_4\A_5\A_6\\
+    & =
+    \begin{bmatrix}
+      c_3 & 0 & s_3 & c_3a_3\\
+      s_3 & 0 & -c_3 & s_3a_3\\
+      0 & 1 & 0 & d_3\\
+      0 & 0 & 0 & 1
+    \end{bmatrix} * \A_4\A_5\A_6\\
+    & =
+    \begin{bmatrix}
+      c_3(c_4c_5c_6-s_4s_6)-s_3s_5c_6 & -c_3(c_4c_5s_6+s_4c_6)+s_3s_5s_6 & c_3c_4s_5+s_3c_5 & s_3d_4+c_3a_3\\
+      s_3(c_4c_5c_6-s_4s_6)+c_3s_5c_6 & -s_3(c_4c_5s_6+s_4c_6)-c_3s_5s_6 & s_3c_4s_5-c_3c_5 & -c_3d_4+s_3a_3\\
+      s_4c_5c_6+c_4s_6 & -s_4c_5s_6+c_4c_6 & s_4s_5 & d_3\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  \begin{align*}
+  ^{1}\T & = \A_1^{-1}\T\\
+    & = \A_2\A_3\A_4\A_5\A_6\\
+    & =
+    \begin{bmatrix}
+      c_2 & -s_2 & 0 & c_2a_2\\
+      s_2 & c_2 & 0 & s_2a_2\\
+      0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 1
+    \end{bmatrix} * \A_3\A_4\A_5\A_6\\
+    & =
+    \begin{bmatrix}
+      c_{23}(c_4c_5c_6-s_4s_6)-s_{23}s_5c_6 & -c_{23}(c_4c_5s_6+s_4c_6)+s_{23}s_5s_6 & c_{23}c_4s_5+s_{23}c_5 & s_{23}d_4+c_{23}a_3+c_2a_2\\
+      s_{23}(c_4c_5c_6-s_4s_6)+c_{23}s_5c_6 & -s_{23}(c_4c_5s_6+s_4c_6)-c_{23}s_5s_6 & s_{23}c_4s_5-c_{23}c_5 & -c_{23}d_4+s_{23}a_3+s_2a_2\\
+      s_4c_5c_6+c_4s_6 & -s_4c_5s_6+c_4c_6 & s_4s_5 & d_3\\
+      0 & 0 & 0 & 1
+    \end{bmatrix}
+  \end{align*}
+  $$\T = \A_1 * \A_2 * \A_3 * \A_4 * \A_5 * \A_6 = 
+  \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$$
+  \begin{align*}
+    \begin{cases}
+      n_x = c_1(c_{23}(c_4c_5c_6-s_4s_6)-s_{23}s_5c_6)-s_1(s_4c_5c_6+c_4s_6)\\
+      n_y = s_1(c_{23}(c_4c_5c_6-s_4s_6)-s_{23}s_5c_6)+c_1(s_4c_5c_6+c_4s_6)\\
+      n_z = -s_{23}(c_4c_5c_6-s_4s_6)-c_{23}s_5c_6\\
+      o_x = -c_1(c_{23}(c_4c_5s_6+s_4c_6)-s_{23}s_5s_6)+s_1(s_4c_5s_6-c_4c_6)\\
+      o_y = -s_1(c_{23}(c_4c_5s_6+s_4c_6)-s_{23}s_5s_6)-c_1(s_4c_5s_6-c_4c_6)\\
+      o_z = s_{23}(c_4c_5s_6+s_4c_6)+c_{23}s_5s_6\\
+      a_x = c_1(c_{23}c_4s_5+s_{23}c_5)-s_1s_4s_5\\
+      a_y = s_1(c_{23}c_4s_5+s_{23}c_5)+c_1s_4s_5\\
+      a_z = -s_{23}c_4s_5+c_{23}c_5\\
+      p_x = c_1(s_{23}d_4+c_{23}a_3+c_2a_2)-s_1d_3\\
+      p_y = s_1(s_{23}d_4+c_{23}a_3+c_2a_2)+c_1d_3\\
+      p_z = c_{23}d_4-s_{23}a_3-s_2a_2\\
+    \end{cases}
+  \end{align*}
+  Jacobian Matrix
+  $$\begin{bmatrix}
+    ^{T_6}d_x \\ ^{T_6}d_y \\ ^{T_6}d_z \\ ^{T_6}\delta_x \\ ^{T_6}\delta_y \\ ^{T_6}\delta_z
+  \end{bmatrix} =
+  \begin{bmatrix}
+    ^{T_6}d_{1x} & ^{T_6}d_{2x} & ^{T_6}d_{3x} & ^{T_6}d_{4x} & ^{T_6}d_{5x} & ^{T_6}d_{6x}\\
+    ^{T_6}d_{1y} & ^{T_6}d_{2y} & ^{T_6}d_{3y} & ^{T_6}d_{4y} & ^{T_6}d_{5y} & ^{T_6}d_{6y}\\
+    ^{T_6}d_{1z} & ^{T_6}d_{2z} & ^{T_6}d_{3z} & ^{T_6}d_{4z} & ^{T_6}d_{5z} & ^{T_6}d_{6z}\\
+    ^{T_6}\delta_{1x} & ^{T_6}\delta_{2x} & ^{T_6}\delta_{3x} & ^{T_6}\delta_{4x} & ^{T_6}\delta_{5x} & ^{T_6}\delta_{6x}\\
+    ^{T_6}\delta_{1y} & ^{T_6}\delta_{2y} & ^{T_6}\delta_{3y} & ^{T_6}\delta_{4y} & ^{T_6}\delta_{5y} & ^{T_6}\delta_{6y}\\
+    ^{T_6}\delta_{1z} & ^{T_6}\delta_{2z} & ^{T_6}\delta_{3z} & ^{T_6}\delta_{4z} & ^{T_6}\delta_{5z} & ^{T_6}\delta_{6z}\\
+  \end{bmatrix} *
+  \begin{bmatrix}
+    dq_1 \\ dq_2 \\ dq_3 \\ dq_4 \\ dq_5 \\ dq_6
+  \end{bmatrix}
+  $$
+  $$
+  ^{T_N}d_i =
+  \begin{bmatrix}
+  p_xn_y-n_xp_y \\ p_xo_y-o_xp_y \\ p_xa_y-a_xp_y
+  \end{bmatrix} \texttt{and  }
+  ^{T_N}\delta_i =
+  \begin{bmatrix}
+  n_z \\ o_z \\ a_z
+  \end{bmatrix}
+  $$
+  let
+  $\T = \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$, then
+  \begin{align*}
+    \begin{cases}
+      ^{T_6}d_{1x} = p_xn_y-n_xp_y = (s_{23}d_4+c_{23}a_3+c_2a_2)(s_4c_5c_6+c_4s_6)-d_3(c_{23}(c_4c_5c_6-s_4s_6)-s_{23}s_5c_6)\\
+      ^{T_6}d_{1y} = p_xo_y-o_xp_y = -(s_{23}d_4+c_{23}a_3+c_2a_2)(s_4c_5s_6-c_4c_6)+d_3(c_{23}(c_4c_5s_6+s_4c_6)-s_{23}s_5s_6)\\
+      ^{T_6}d_{1z} = p_xa_y-a_xp_y = (s_{23}d_4+c_{23}a_3+c_2a_2)s_4s_5-d_3(c_{23}c_4s_5+s_{23}c_5)\\
+      ^{T_6}\delta_{1x} = n_z = -s_{23}(c_4c_5c_6-s_4s_6)-c_{23}s_5c_6\\
+      ^{T_6}\delta_{1y} = o_z = s_{23}(c_4c_5s_6+s_4c_6)+c_{23}s_5s_6\\
+      ^{T_6}\delta_{1z} = a_z = -s_{23}c_4s_5+c_{23}c_5
+    \end{cases}
+  \end{align*}
+  let
+  $^1\T = \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$, then
+  \begin{align*}
+    \begin{cases}
+      ^{T_6}d_{2x} = p_xn_y-n_xp_y = (c_4c_5c_6-s_4s_6)(d_4+a_2s_3)+s_5c_6(a_3+c_3a_2)\\
+      ^{T_6}d_{2y} = p_xo_y-o_xp_y = -(c_4c_5s_6+s_4c_6)(d_4+a_2s_3)-s_5s_6(a_3+c_3a_2)\\
+      ^{T_6}d_{2z} = p_xa_y-a_xp_y = c_4s_5(d_4+a_2s_3)-c_5(a_3+c_3a_2)\\
+      ^{T_6}\delta_{2x} = n_z = s_4c_5c_6+c_4s_6\\
+      ^{T_6}\delta_{2y} = o_z = -s_4c_5s_6+c_4c_6\\
+      ^{T_6}\delta_{2z} = a_z = s_4s_5
+    \end{cases}
+  \end{align*}
+  let
+  $^2\T = \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$, then
+  \begin{align*}
+    \begin{cases}
+      ^{T_6}d_{3x} = p_xn_y-n_xp_y = d_4(c_4c_5c_6-s_4s_6)+a_3s_5c_6\\
+      ^{T_6}d_{3y} = p_xo_y-o_xp_y = -d_4(c_4c_5s_6+s_4c_6)-a_3s_5s_6\\
+      ^{T_6}d_{3z} = p_xa_y-a_xp_y = d_4c_4s_5-a_3c_5\\
+      ^{T_6}\delta_{3x} = n_z = s_4c_5c_6+c_4s_6\\
+      ^{T_6}\delta_{3y} = o_z = -s_4c_5s_6+c_4c_6\\
+      ^{T_6}\delta_{3z} = a_z = s_4s_5
+    \end{cases}
+  \end{align*}
+  let
+  $^3\T = \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$, then
+  \begin{align*}
+    \begin{cases}
+      ^{T_6}d_{4x} = p_xn_y-n_xp_y = 0\\
+      ^{T_6}d_{4y} = p_xo_y-o_xp_y = 0\\
+      ^{T_6}d_{4z} = p_xa_y-a_xp_y = 0\\
+      ^{T_6}\delta_{4x} = n_z = -s_5c_6\\
+      ^{T_6}\delta_{4y} = o_z = s_5s_6\\
+      ^{T_6}\delta_{4z} = a_z = c_5
+    \end{cases}
+  \end{align*}
+  let
+  $^4\T = \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$, then
+  \begin{align*}
+    \begin{cases}
+      ^{T_6}d_{5x} = p_xn_y-n_xp_y = 0\\
+      ^{T_6}d_{5y} = p_xo_y-o_xp_y = 0\\
+      ^{T_6}d_{5z} = p_xa_y-a_xp_y = 0\\
+      ^{T_6}\delta_{5x} = n_z = s_6\\
+      ^{T_6}\delta_{5y} = o_z = c_6\\
+      ^{T_6}\delta_{5z} = a_z = 0
+    \end{cases}
+  \end{align*}
+  let
+  $^5\T = \begin{bmatrix}
+    n_x & o_x & a_x & p_x\\
+    n_y & o_y & a_y & p_y\\
+    n_z & o_z & a_z & p_z\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$, then
+  \begin{align*}
+    \begin{cases}
+      ^{T_6}d_{6x} = p_xn_y-n_xp_y = 0\\
+      ^{T_6}d_{6y} = p_xo_y-o_xp_y = 0\\
+      ^{T_6}d_{6z} = p_xa_y-a_xp_y = 0\\
+      ^{T_6}\delta_{6x} = n_z = 0\\
+      ^{T_6}\delta_{6y} = o_z = 0\\
+      ^{T_6}\delta_{6z} = a_z = 1
+    \end{cases}
+  \end{align*}
+
+\section{R.Paul's methods: inverse Jacobian solution}
+From $\A_1^{-1}\T = \A_2\A_3\A_4\A_5\A_6$,
+$$\begin{bmatrix}
+    c_1 & s_1 & 0 & 0\\
+    0 & 0 & -1 & 0\\
+    -s_1 & c_1 & 0 & 0\\
+    0 & 0 & 0 & 1
+  \end{bmatrix} \T =
+  \begin{bmatrix}
+    \dots & \dots & \dots & s_{23}d_4+c_{23}a_3+c_2a_2\\
+    \dots & \dots & s_4s_5s & -c_{23}d_4+s_{23}a_3+s_2a_2\\
+    \dots & \dots & \dots & d_3\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$$
+We have $-s_1p_x+c_1p_y = d_3$,\\
+differentiate with respect to $\Th_1$
+$$d\Th_1 = \frac{-s_1dp_x+c_1dp_y}{c_1p_x+s_1p_y}$$
+Singular point: when $c_1p_x+s_1p_y = 0$\\
+From $\A_2^{-1}\A_1^{-1}\T = \A_3\A_4\A_5\A_6$,
+$$\begin{bmatrix}
+    c_1c_2 & s_1c_2 & -s_2 & -a_2\\
+    -c_1s_2 & -s_1s_2 & -c_2 & 0\\
+    -s_1 & c_1 & 0 & 0\\
+    0 & 0 & 0 & 1
+  \end{bmatrix} \T =
+  \begin{bmatrix}
+    \dots & \dots & \dots & s_3d_4+c_3a_3\\
+    \dots & \dots & \dots & -c_3d_4+s_3a_3\\
+    \dots & \dots & \dots & d_3\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$$
+We have $$s_3d_4+c_3a_3 = \frac{p_x^2+p_y^2+p_z^2-a_2^2-a_3^2-d_3^2-d_4^2}{2a_2}$$
+differentiate with respect to $\Th_3$,
+$$d\Th_3 = \frac{p_xdp_x+p_ydp_y+p_zdp_z}{-a_2(s_3a_3-c_3d_4)}$$
+Singular point: when $s_3a_3-c_3d_4 = 0$\\
+We also have $c_2(c_1p_x+s_1p_y) - s_2p_z = s_3d_4 + c_3a_3 + a_2$,
+differentiate with respect to $\Th_2$,
+$$\Th_2 = \frac{c_2dc_1p_x+c_1c_2dp_x+c_2ds_1p_y+c_2s_1dp_y-s_2dp_z-d_4ds_3-a_3dc_3}{s_2c_1p_x+s_2s_1p_y+c_2p_z}$$
+Singular point: when $s_2c_1p_x+s_2s_1p_y+c_2p_z = 0$\\
+From $\A_3^{-1}\A_2^{-1}\A_1^{-1}\T = \A_4\A_5\A_6$,
+$$\begin{bmatrix}
+    c_1c_{23} & s_1c_{23} & -s_{23} & -c_3a_2-a_3\\
+    -s_1 & c_1 & 0 & -d_3\\
+    c_1s_{23} & s_1s_{23} & c_{23} & -s_3a_2\\
+    0 & 0 & 0 & 1
+  \end{bmatrix} \T =
+  \begin{bmatrix}
+    \dots & \dots & c_4s_5 & \dots\\
+    \dots & \dots & s_4s_5 & \dots\\
+    -s_5c_6 & s_5s_6 & \dots & \dots\\
+    0 & 0 & 0 & 1
+  \end{bmatrix}$$
+We have $$\tan\Th_4 = \frac{-s_1a_x+c_1a_y}{c_1c_{23}a_x+s_1c_{23}a_y-s_{23}a_z}$$
+differentiate with respect to $\Th_4$,
+$$d\Th_4=\frac{[(-s_1da_x+c_1da_y)(c_1c_{23}a_x+s_1c_{23}a_y-s_{23}a_z)-(-s_1a_x+c_1a_y)(c_1c_{23}da_x+s_1c_{23}da_y-s_{23}da_z)]c_4^2}{(c_1c_{23}a_x+s_1c_{23}a_y-s_{23}a_z)^2}$$
+Singular point: when $c_1c_{23}a_x+s_1c_{23}a_y-s_{23}a_z = 0$\\
+From $\A_1^{-1}\T = \A_2\A_3\A_4\A_5\A_6$,\\
+We have $-s_1a_x+c_1a_y = s_4s_5$\\
+differentiate with respect to $\Th_5$,
+$$d\Th_5=\frac{-s_1da_x+c_1da_y-s_5ds_4}{s_4c_5}$$
+Singular point: when $s_4c_5 = 0$\\
+From $\A_3^{-1}\A_2^{-1}\A_1^{-1}\T = \A_4\A_5\A_6$,\\
+We have $$\tan\Th_6 = \frac{c_1s_{23}o_x+s_1s_{23}o_y+c_{23}o_z}{-(c_1s_{23}n_x+s_1s_{23}n_y+c_{23}n_z)} = \frac{P}{Q}$$
+differentiate with respect to $\Th_6$,
+$$d\Th_6=\frac{[(c_1s_{23}do_x+s_1s_{23}do_y+c_{23}do_z)Q+(c_1s_{23}dn_x+s_1s_{23}dn_y+c_{23}dn_z)P]c_6^2}{Q^2}$$
+
+\section{Jacobian derived by wrist coordinate frame}
+From paper ``An Efficient Solution of Differential Inverse Kinematics Problem for Wrist-Partitioned Robots", we know
+$$
+\J_w = 
+\begin{bmatrix}
+  \J_{11} & \J_{12} & \J_{13} & 0 & 0 & 0\\
+  \J_{21} & 0 & 0 & 0 & 0 & 0\\
+  \J_{31} & \J_{32} & \J_{33} & 0 & 0 & 0\\
+  \J_{41} & 0 & 0 & 0 & \J_{45} & \J_{46}\\
+  0 & 1 & 1 & 0 & \J_{55} & \J_{56}\\
+  \J_{61} & 0 & 0 & 1 & 0 & \J_{66}\\
+\end{bmatrix} \texttt{where}
+$$ 
+\begin{align*}
+  \begin{cases}
+    \J_{11} = -\J_{61}d_3\\
+    \J_{21} = a_2\cos\Th_2+a_3\J_{61}-d_4\J_{41}\\
+    \J_{31} = \J_{41}d_3\\
+    \J_{41} = -\sin(\Th_2+\Th_3)\\
+    \J_{61} = \cos(\Th_2+\Th_3)\\
+    \J_{12} = a_2\sin\Th_3+d_4\\
+    \J_{32} = -a_2cos\Th_3-a_3\\
+    \J_{13} = d_4\\
+    \J_{33} = -a_3\\
+    \J_{45} = -\sin\Th_4\\
+    \J_{55} = \cos\Th_4\\
+    \J_{46} = \cos\Th_4\sin\Th_5\\
+    \J_{56} = \sin\Th_4\sin\Th_5\\
+    \J_{66} = \cos\Th_5
+  \end{cases}
+\end{align*}
+$$d\bar{x} = \J_wd\bar{q} \quad d\bar{x} = \begin{bmatrix}dx & dy & dz & \delta_x & \delta_y & \delta_z\end{bmatrix}^T$$
+$$\W_i = \bar{\delta}_i + \epsilon \bar{d}_i \quad \bar{\delta}_i = \begin{bmatrix}\delta x_i & \delta y_i & \delta z_i\end{bmatrix}^T \quad \bar{d}_i = \begin{bmatrix}dx_i & dy_i & dz_i\end{bmatrix}^T$$
+$$\W_{\delta_T} = \bar{\delta} + \epsilon \bar{d} = \W_1dq_1 + \W_2dq_2 + ... + \W_Ndq_N$$
+
+\begin{align*}
+  \begin{cases}
+    \W_{1}^w = \J_{41}\bar{i}^w + \J_{61}\bar{k}^w + \epsilon (\J_{11}\bar{i}^w + \J_{21}\bar{j}^w + \J_{31}\bar{k}^w)\\
+    \W_{2}^w = \bar{j}^w + \epsilon (\J_{12}\bar{i}^w + \J_{32}\bar{k}^w)\\
+    \W_{3}^w = \bar{j}^w + \epsilon (\J_{13}\bar{i}^w + \J_{33}\bar{k}^w)\\
+    \W_{4}^w = \bar{k}^w\\
+    \W_{5}^w = \J_{45}\bar{i}^w + \J_{55}\bar{j}^w\\
+    \W_{6}^w = \J_{46}\bar{i}^w + \J_{56}\bar{j}^w + \J_{66}\bar{k}^w
+  \end{cases}
+\end{align*}
+
+\begin{align*}
+  \begin{cases}
+    \N_{1}^w = \epsilon \bar{j}^w\\
+    \N_{2}^w = \epsilon (\J_{33}\bar{i}^w - \J_{13}\bar{k}^w)\\
+    \N_{3}^w = \epsilon (\J_{13}\bar{i}^w + \J_{33}\bar{k}^w)\\
+    \N_{4}^w = \bar{k}^w\\
+    \N_{5}^w = \J_{45}\bar{i}^w + \J_{55}\bar{j}^w\\
+    \N_{6}^w = \J_{55}\bar{i}^w - \J_{45}\bar{j}^w
+  \end{cases}
+\end{align*}
+
+\begin{align*}
+  \begin{cases}
+    dq_1 = \frac{dy_w}{\J_{21}}\\
+    dq_2 = \frac{A\J_{33}-B\J_{13}}{\J_{12}\J_{33}-\J_{13}\J_{32}}\\
+    dq_3 = \frac{(A-\J_{12}dq_2)\J_{13}+(B-\J_{32}dq_2)\J_{33}}{\J_{13}^2+\J_{33}^2}\\
+    dq_4 = \delta z_w-\J_{61}dq_1 - \J_{66}dq_6\\
+    dq_5 = (C - \J_{46}dq_6)J_{45} + (D - \J_{56}dq_6)\J_{55}\\
+    dq_6 = \frac{C\J_{55}-D\J_{45}}{\J_{46}\J_{55}-\J_{45}\J_{56}}
+  \end{cases}
+\end{align*}
+
+
+$$
+\J_w^{-1} = 
+\begin{bmatrix}
+  0 & \G_{12} & 0 & 0 & 0 & 0\\
+  \G_{21} & \G_{22} & \G_{23} & 0 & 0 & 0\\
+  \G_{31} & \G_{32} & \G_{33} & 0 & 0 & 0\\
+  \G_{41} & \G_{42} & \G_{43} & \G_{44} & \G_{45} & 1\\
+  \G_{51} & \G_{52} & \G_{53} & \G_{54} & \G_{55} & 0\\
+  \G_{61} & \G_{62} & \G_{63} & \G_{64} & \G_{65} & 0\\  
+\end{bmatrix} \texttt{where}
+$$ 
+$$\G_{12} = 1/\J_{21} \quad \G_{21} = \J_{33}/\LL \quad \G_{22} = \G_{12}\M/\LL \quad \G_{23} = -\J_{13}/\LL$$
+$$\G_{31} = (\J_{13}-\G_{21}\p)/\N \quad \G_{32} = -(\G_{12}\Q+\G_{22}\p)/\N \quad \G_{33} = (\J_{33}-\G_{23}P)/\N$$
+$$\G_{41} = -\J_{66}\G_{61} \quad \G_{42} = -\J_{61}\G_{12}-\J_{66}\G_{62} \quad \G_{43} = -\J_{66}\G_{63}$$
+$$\G_{44} = -\J_{66}\G_{64} \quad \G_{45} = -\J_{66}\G_{65}$$
+$$\G_{51} = -\J_{55}(\G_{21} + \G_{31})-\G_{61}\s \quad \G_{52} = -\J_{41}\J_{45}\G_{12}-\J_{55}(\G_{22}+\G_{32})-\G_{62}\s$$
+$$\G_{53} = -\J_{55}(\G_{23} + \G_{33})-\G_{63}\s \quad \G_{54} = \J_{45} - \G_{64}\s \quad \G_{55} = \J_{55} - \G_{65}\s$$
+$$\G_{61} = \J_{45}(\G_{21} + \G_{31})/\R \quad \G_{62} = [\J_{45}(\G_{22} + \G_{32})-\J_{41}\J_{55}\G_{12}]/\R$$
+$$\G_{63} = (\G_{23} + \G_{33})\J_{45}/\R \quad \G_{64} = \J_{55}/\R \quad \G_{65} = -\J_{45}/\R$$
+where
+$$\LL = \J_{12}\J_{33}-\J_{13}\J_{32} \quad \M = \J_{13}\J_{31}-\J_{11}\J_{33} \quad \N = \J_{13}^2+\J_{33}^2 \quad \p = \J_{12}\J_{13}+\J_{32}\J_{33}$$
+$$\Q = \J_{11}\J_{13}+\J_{31}\J_{33} \quad \R = \J_{46}\J_{55}-\J_{45}\J_{56} \quad \s = \J_{45}\J_{46}+\J_{55}\J_{56}$$
+\end{document}
