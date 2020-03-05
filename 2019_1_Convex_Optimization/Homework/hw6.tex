@@ -1,0 +1,188 @@
+%!TEX program = pdflatex
+\documentclass[12pt]{extarticle}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage{mdframed}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[numbered,framed]{matlab-prettifier}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue
+}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\everymath{\displaystyle}
+
+\input{../defs.tex}
+
+\title{Assignment \#6}
+\author{Shao Hua, Huang 0750727\\
+ECM5901 - Optimization Theory and Application}
+\begin{document}
+\maketitle
+
+% Exercise 1
+\begin{exercise}
+  Derive a dual problem for
+  \begin{align*}
+    \text{minimize}\quad \sum_{i=1}^N\|A_ix-b_i\|_2+\frac{1}{2}\|x-x_0\|_2^2
+  \end{align*}
+  The problem data are $A_i\in \R^{m_i\times n},\;b_i\in\R^{m_i}$, and $x_0\in\R^n$.
+  First introduce new variables $y_i\in\R^{m_i}$ and equality constraints $y_i=A_ix-b_i$. (20\%)
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  The original problem is equivalent to
+  \begin{align*}
+    \text{minimize\;\;}\quad& \sum_{i=1}^N\|y_i\|_2+\frac{1}{2}\|x-x_0\|_2^2\\
+    \text{subject to}  \quad& y_i=A_ix-b_i,\;i=1,\dots,N
+  \end{align*}
+  The Lagrange is
+  \begin{align*}
+    L(x,z_1,\dots,z_N)=\sum_{i=1}^N\|y_i\|_2+\frac{1}{2}\|x-x_0\|_2^2+\sum_{i=1}^Nz_i^T(y_i-A_ix+b_i)
+  \end{align*}
+\end{proof}
+
+% Exercise 2
+\begin{exercise}
+  (A convex problem in which strong duality fails.)
+  Consider the optimization problem
+  \begin{align*}
+    \text{minimize\;\;}\quad&e^{-x}\\
+    \text{subject to}  \quad&x^2/y\le 0
+  \end{align*}
+  with variables $x$ and $y$, and domain $\D=\{(x,y)\mid y>0\}$.
+  \begin{enumerate}[label=(\alph*)]
+    \item Verify that this is a convex optimization problem. Find the optimal value. (5\%)
+    \item Give the Lagrange dual problem, and find the optimal solution $\lambda^\ast$ and optimal value $d^\ast$ of the dual problem. (10\%)
+    \item What is the optimal duality gap? Does Slater's condition hold for this problem? (5\%)
+  \end{enumerate}
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  $ $
+  \begin{enumerate}[label=(\alph*)]
+    \item a
+    \item b
+    \item c
+  \end{enumerate}
+\end{proof}
+
+% Exercise 3
+\begin{exercise}
+  Prove (without using any linear programming code) that the optimal solution of the LP
+  \begin{align*}
+    \text{minimize\;\;}\quad&47x_1+93x_2+17x_3-93x_4\\
+    \text{subject to}  \quad&
+      \begin{bmatrix}
+        -1 & -6 & 1 & 3\\
+        -1 & -2 & 7 & 1\\
+        0 & 3 & -10 & -1\\
+        -6 & -11 & -2 & 12\\
+        1 & 6 & -1 & -3
+      \end{bmatrix}
+      \begin{bmatrix}
+        x_1\\x_2\\x_3\\x_4
+      \end{bmatrix}\preceq
+      \begin{bmatrix}
+        -3\\5\\-8\\-7\\4
+      \end{bmatrix}
+  \end{align*}
+  is unique, and given by $x^\ast=(1,1,1,1)$. (20\%)
+\end{exercise}
+\begin{proof}
+\end{proof}
+
+% Exercise 4
+\begin{exercise}
+  (SDP relaxations of two-way partitioning problem).
+  We consider the two-way partitioning problem (5.7), described on page 219,
+  \begin{align}
+    \text{minimize\;\;}\quad& x^TWx\nonumber\\
+    \text{subject to}  \quad& x_i^2=1,\;i=1,\dots,n\label{eq:4.1}
+  \end{align}
+  with variable $x\in\R^n$.
+  The Lagrange dual of this (nonconvex) problem is given by the SDP
+  \begin{align}
+    \text{maximize\;}\quad& -\ones^T\nu\nonumber\\
+    \text{subject to}\quad& W+\diag(\nu)\succeq 0\label{eq:4.2}
+  \end{align}
+  with variable $\nu\in\R^n$.
+  The optimal value of this SDP gives a lower bound on the optimal value of the partitioning problem \eqref{eq:4.1}.
+  In this exercise we derive another SDP that gives a lower bound on the optimal value of the two-way partitioning problem, and explore the connection between the two SDPs.
+  \begin{enumerate}[label=(\alph*)]
+    \item Two-way partitioning problem in matrix form.
+          Show that the two-way partitioning problem can be cast as
+          \begin{align*}
+            \text{maximize\;}\quad& \tr(WX)\\
+            \text{subject to}\quad& X\succeq 0,\;\rank(X)=1\\
+                                  & X_{ii}=1,\;i=1,\dots,n
+          \end{align*}
+          with variable $X\in\symm^n$.
+          Hint.
+          Show that if $X$ is feasible, then it has the form $X=xx^T$, where $x\in\R^n$ satisfies $x_i\in\{+1,-1\}$ (and vice versa). (5\%)
+    \item (SDP relaxation of two-way partitioning problem.) 
+          Using the formulation in part (a), we can form the relaxation
+          \begin{align}
+            \text{maximize\;}\quad& \tr(WX)\nonumber\\
+            \text{subject to}\quad& X\succeq 0\label{eq:4.3}\\
+                                  & X_{ii}=1,\;i=1,\dots,n\nonumber
+          \end{align}
+          with variable $X\in\symm^n$.
+          This problem is an SDP, and therefore can be solved efficiently.
+          Explain why its optimal value gives a lower bound on the optimal value of the two-way partitioning problem \eqref{eq:4.1}.
+          What can you say if an optimal point $X^\ast$ for this SDP has rank one? (5\%)
+    \item We now have two SDPs that give a lower bound on the optimal value of the two-way partitioning problem \eqref{eq:4.1}:
+          the SDP relaxation \eqref{eq:4.3} found in part (b),
+          and the Lagrange dual of the two-way partitioning problem, given in \eqref{eq:4.2}.
+          What is the relation between the two SDPs?
+          What can you say about the lower bounds found by them?
+          Hint: Relate the two SDPs via duality. (10\%)
+  \end{enumerate}
+\end{exercise}
+\begin{proof}
+  $ $
+  \begin{enumerate}[label=(\alph*)]
+    \item a
+    \item b
+    \item c
+  \end{enumerate}
+\end{proof}
+
+% Exercise 5
+\begin{exercise}
+  The pure Newton method.
+  Newton's method with fixed step size $t=1$ can diverge if the initial point is not close to $x^\ast$.
+  Consider
+  \begin{align*}
+    \text{minimize}\quad f(x)=\log(e^x+e^{-x})
+  \end{align*}
+  $f(x)$ has a unique minimizer $x^\ast=0$.
+  Run Newton's method with fixed step size $t=1$, starting at $x^{(0)}=1$ and at $x^{(0)}=1.2$.
+  Show the errors of the first four iterates.
+  (You can do it by hand or using \textsc{Matlab}.)
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  $ $
+  \begin{lstlisting}[style=Matlab-editor]
+    for ok
+    while ok
+  \end{lstlisting}
+\end{proof}
+
+
+\end{document}

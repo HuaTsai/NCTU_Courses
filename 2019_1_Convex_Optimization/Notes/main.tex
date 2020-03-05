@@ -1,0 +1,111 @@
+%!TEX program = pdflatex
+\documentclass[12pt]{book}
+\usepackage[english]{babel}
+\usepackage[titletoc]{appendix}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage{mdframed}
+\usepackage{blindtext}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage[labelfont=bf,labelsep=space]{caption}
+\setcaptionmargin{40pt}
+\graphicspath{{./figures/}}
+
+\hypersetup{
+  colorlinks=true,
+  linktoc=all,
+  linkcolor=blue
+}
+\theoremstyle{definition}
+\newmdtheoremenv[
+  innertopmargin=-5pt,
+  innerbottommargin=5pt,
+  innerleftmargin=0pt,
+  innerrightmargin=0pt,
+  usetwoside=false,
+  leftmargin=20pt,
+  linewidth=1pt,
+  leftline=false,
+  rightline=false
+  ]{example}{Example}[chapter]
+\newmdtheoremenv[
+  innertopmargin=-5pt,
+  innerbottommargin=5pt,
+  innerleftmargin=0pt,
+  innerrightmargin=0pt,
+  usetwoside=false,
+  leftmargin=20pt,
+  linewidth=1pt,
+  leftline=false,
+  rightline=false
+  ]{remark}{Remark}[chapter]
+\newmdtheoremenv[
+  innertopmargin=-5pt,
+  innerbottommargin=5pt,
+  innerleftmargin=0pt,
+  innerrightmargin=0pt,
+  usetwoside=false,
+  leftmargin=20pt,
+  linewidth=1pt,
+  leftline=false,
+  rightline=false
+  ]{algorithm}{Algorithm}[chapter]
+\everymath{\displaystyle}
+
+\input{../defs.tex}
+
+\title{Convex Optimization}
+\date{}
+
+\begin{document}
+\pagenumbering{roman}
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+\cleardoublepage
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[OL]{\rightmark}
+\fancyhead[OR]{\thepage}
+\fancyhead[ER]{\rightmark}
+\fancyhead[EL]{\thepage}
+
+\pagenumbering{arabic}
+\input{"Chapter 1.tex"}
+
+\part{Theory}
+\input{"Chapter 2.tex"}
+\input{"Chapter 3.tex"}
+\input{"Chapter 4.tex"}
+\input{"Chapter 5.tex"}
+
+% \part{Applications}
+% \input{"Chapter 6.tex"}
+% \input{"Chapter 7.tex"}
+% \input{"Chapter 8.tex"}
+
+\part{Algorithms}
+\input{"Chapter 9.tex"}
+\input{"Chapter 10.tex"}
+\input{"Chapter 11.tex"}
+ 
+\appendix
+\appendixpage
+% \noappendicestocpagenum
+% \addappheadtotoc
+\input{"Appendix A.tex"}
+% \input{"Appendix B.tex"}
+% \input{"Appendix C.tex"}
+
+\end{document}

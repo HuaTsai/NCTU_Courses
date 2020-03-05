@@ -1,0 +1,264 @@
+%!TEX program = pdflatex
+\documentclass[12pt]{extarticle}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage{mdframed}
+\usepackage{blindtext}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue
+}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\everymath{\displaystyle}
+
+\input{../defs.tex}
+
+\title{Assignment \#2}
+\author{Shao Hua, Huang 0750727\\
+ECM5901 - Optimization Theory and Application}
+
+\begin{document}
+\maketitle
+
+% Exercise 1
+\begin{exercise}
+  Suppose $C\subset \R^m$ is convex and $f:\R^n\rightarrow \R^m$ is an affine function. Show that the inverse image of the convex set $C$
+  \begin{align*}
+    f^{-1}(C)=\{x\mid f(x)\in C\}
+  \end{align*}
+  is convex. (10\%)
+\end{exercise}
+\begin{proof}
+  $f$ is an affine function $\Rightarrow f(x)=Ax+b$ where $A\in\R^{m\times n}$ and $b\in\R^m$\\
+  Let $x_1, x_2 \in f^{-1}(C)$, we need to prove $\theta x_1+(1-\theta)x_2\in f^{-1}(C)$ where $0\le\theta\le 1$.
+  \begin{align*}
+    x_1, x_2\in f^{-1}(C)
+        &\Rightarrow f(x_1), f(x_2)\in C\\
+        &\Rightarrow \theta f(x_1)+(1-\theta)f(x_2)\in C\\
+        &\Rightarrow \theta (Ax_1+b)+(1-\theta)(Ax_2+b)\in C\\
+        &\Rightarrow A(\theta x_1+(1-\theta)x_2)+b\in C\\
+        &\Rightarrow f(\theta x_1+(1-\theta)x_2)\in C\\
+        &\Rightarrow \theta x_1+(1-\theta)x_2\in f^{-1}(C)
+  \end{align*}
+  Therefore, $f^{-1}(C)$ is convex.
+\end{proof}
+    
+% Exercise 2
+\begin{exercise}
+  The second-order cone is the norm cone for the Euclidean norm, \ie
+  \begin{align*}
+    C &= \{(x, t)\in\R^{n+1}\mid \|x\|_2\le t\}\\
+      &= \left\{
+        \begin{bmatrix}
+          x\\t
+        \end{bmatrix}
+        \;\middle|\;
+        \begin{bmatrix}
+          x\\t
+        \end{bmatrix}^T
+        \begin{bmatrix}
+          I & 0\\
+          0 & -1
+        \end{bmatrix}
+        \begin{bmatrix}
+          x\\t
+        \end{bmatrix}\le 0, t\ge 0\right\}
+  \end{align*}
+  Show that $C$ is convex. (10\%)
+\end{exercise}
+\begin{proof}
+  Let $(x_1, t_1), (x_2, t_2) \in C$, we need to prove for $0\le\theta\le 1$, the following holds
+  \begin{align*}
+    \theta (x_1, t_1)+(1-\theta)(x_2, t_2)=(\theta x_1+(1-\theta)x_2, \theta t_1+(1-\theta)t_2)\in C
+  \end{align*}
+  We have $\|x_1\|_2\le t_1$, $\|x_2\|_2\le t_2$, check whether the above vector is in norm cone
+  \begin{align*}
+    \|\theta x_1+(1-\theta)x_2\|_2
+        &\le \theta\|x_1\|_2+(1-\theta)\|x_2\|_2\quad\text{(triangle inequality of norm)}\\
+        &\le \theta t_1+(1-\theta)t_2
+  \end{align*}
+  Therefore, $C$ is convex.
+\end{proof}
+
+% Exercise 3
+\begin{exercise}
+  The distance between two sets $C$ and $D$ is defined as
+  \begin{align*}
+    \inf\{\|u-v\|_2\mid u\in C, v\in D\}.
+  \end{align*}
+  What is the distance between two parallel hyperplanes $\{x\in\R^n\mid a^Tx=b_1\}$ and $\{x\in\R^n\mid a^Tx=b_2\}$ for $a\in\R^n, b_1, b_2\in\R$? (10\%)
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  The required distance is the same as the distance of the two points $x_1, x_2$ where the hyperplanes intersects the line through origin and parallel to vector $a$. We have
+  \begin{align*}
+    x_1=\frac{b_1}{\|a\|_2^2}a\quad x_2=\frac{b_2}{\|a\|_2^2}a
+  \end{align*}
+  Therefore, $\dist(C, D)=\|x_1-x_2\|_2=\frac{|b_1-b_2|}{\|a\|_2}$
+\end{proof}
+
+% Exercise 4
+\begin{exercise}
+  (Hyperbolic sets.)
+  \begin{enumerate}[label=(\alph*)]
+    \item Show that the hyperbolic set $\{x\in\R_{+}^2\mid x_1x_2\ge 1\}$ is convex. (5\%)
+    \item As a generalization, show that $\{x\in\R_+^n\mid\prod_{i=1}^n x_i\ge 1\}$ is convex. (5\%)
+  \end{enumerate}
+  (Hint: If $a,b\ge 0$ and $0\le\theta\le 1$, then $a^\theta b^{1-\theta}\le\theta a+(1-\theta)b$; see \S 3.1.9.)
+\end{exercise}
+\begin{proof}
+  Employ general arithmetic-geometric mean inequality in \S 3.1.9.
+  \begin{enumerate}[label=(\alph*)]
+    \item Let $(a_1, a_2), (b_1, b_2)$ in the set, \ie $a_1a_2\ge 1, b_1b_2\ge 1,\;a_1, a_2, b_1, b_2\in\R_{+}$\\
+          Check whether $(\theta a_1+(1-\theta)b_1, \theta a_2+(1-\theta)b_2)$ in the set, for $0\le\theta\le 1$
+          \begin{align*}
+            [\theta a_1+(1-\theta)b_1][\theta a_2+(1-\theta)b_2]
+                \ge (a_1^\theta b_1^{1-\theta})(a_2^\theta b_2^{1-\theta})
+                = (a_1a_2)^\theta(b_1b_2)^{1-\theta} \ge 1
+          \end{align*}
+          Therefore, the hyperbolic set is convex.
+    \item Let $a, b$ in the set, \ie $\prod_{i=1}^na_i\ge 1, \prod_{i=1}^nb_i\ge 1,\;a_1,\dots,a_n,b_1,\dots,b_n\in\R_{+}$
+          \begin{align*}
+            \prod_{i=1}^n(\theta a_i+(1-\theta)b_i)\ge \prod_{i=1}^n a_i^\theta b_i^{1-\theta}=(\prod_{i=1}^n a_i)^\theta(\prod_{i=1}^n b_i)^{1-\theta}\ge 1\;\text{where}\;0\le\theta\le 1
+          \end{align*}
+          Therefore, the set is convex.\qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 5
+\begin{exercise}
+  Show that if $S_1$ and $S_2$ are convex sets in $\R^{m+n}$, then so is their partial sum $S=\{(x,y_1+y_2)\mid x\in\R^m,y_1,y_2\in\R^n,(x,y_1)\in S_1,(x,y_2)\in S_2\}$. (10\%)
+\end{exercise}
+\begin{proof}
+  Let $(a_0, a_1+a_2), (b_0, b_1+b_2)\in S$ where $a_0, b_0\in\R^m, a_1, a_2, b_1, b_2\in\R^n$, we need to prove $(\theta a_0+(1-\theta)b_0, \theta (a_1+a_2)+(1-\theta)(b_1+b_2))\in S$.
+  \begin{align*}
+    \begin{cases}
+      (a_0, a_1+a_2)\in S&\Rightarrow (a_0, a_1)\in S_1, (a_0, a_2)\in S_2\\
+      (b_0, b_1+b_2)\in S&\Rightarrow (b_0, b_1)\in S_1, (b_0, b_2)\in S_2
+    \end{cases}
+  \end{align*}
+  Since $S_1, S_2$ are convex, for $0\le\theta\le 1$
+  \begin{align*}
+    &\begin{cases}
+      (\theta a_0+(1-\theta)b_0,\;\theta a_1+(1-\theta)b_1)\in S_1\\
+      (\theta a_0+(1-\theta)b_0,\;\theta a_2+(1-\theta)b_2)\in S_2
+    \end{cases}\\
+    \Rightarrow &(\theta a_0+(1-\theta)b_0,\;\theta (a_1+a_2)+(1-\theta)(b_1+b_2))\in S
+  \end{align*}
+  Therefore, $S$ is convex.
+\end{proof}
+
+% Exercise 6
+\begin{exercise}
+  Linear-fractional functions and convex sets. Let $f:\R^m\rightarrow\R^n$ be the linear-fractional function $f(x)=(Ax+b)/(c^Tx+d)$,
+  $\dom f=\{x\mid c^Tx+d>0\}$. In this problem we study the inverse image of a convex set $C$ under $f$, \ie
+  \begin{align*}
+    f^{-1}(C)=\{x\in\dom f\mid f(x) \in C\}.
+  \end{align*}
+  For each of the following sets $C\subset \R^n$, give a simple description of $f^{-1}(C)$.
+  \begin{enumerate}[label=(\alph*)]
+    \item The halfspace $C=\{y\mid g^Ty\le h\}$ (with $g\ne 0\in\R^n$ and $h\in\R$). (5\%)
+    \item The ellipsoid $C=\{y\mid y^TP^{-1}y\le 1\}$ (where $P\succ0$). (5\%)
+  \end{enumerate}
+\end{exercise}
+\begin{proof}[Solution]
+  $ $\let\qed\relax
+  \begin{enumerate}[label=(\alph*)]
+    \item $\begin{aligned}[t]
+              f^{-1}(C)&=\{x\in\dom f\mid f(x) \in C\}\\
+                       &=\{x\mid g^Tf(x)\le h, c^Tx+d>0, g\ne 0\}\\
+                       &=\{x\mid g^T(\frac{Ax+b}{c^Tx+d})\le h, c^Tx+d>0, g\ne 0\}\\
+                       &=\{x\mid (A^Tg-hc)^Tx\le hd-g^Tb, c^Tx+d>0, g\ne 0\}
+          \end{aligned}$\\
+          It is a new halfspace intersected with $\dom f$.
+    \item $\begin{aligned}[t]
+              f^{-1}(C)&=\{x\in\dom f\mid f(x) \in C\}\\
+                       &=\{x\mid f(x)^TP^{-1}f(x)\le 1, c^Tx+d>0, P\succ 0\}\\
+                       &=\{x\mid (Ax+b)^TP^{-1}(Ax+b)\le(c^Tx+d)^2, c^Tx+d>0, P\succ 0\}\\
+                       &=\{x\mid x^T(A^TP^{-1}A-cc^T)x+2(b^TP^{-1}A+dc^T)x\le d^2-b^TP^{-1}b,c^Tx+d>0, P\succ 0\}
+          \end{aligned}$\\
+          If $A^TP^{-1}A\succ cc^T$, it is a new ellipsoid intersected with $\dom f$.
+  \end{enumerate}
+\end{proof}
+
+% Exercise 7
+\begin{exercise}
+  Give an example of two closed convex sets that are disjoint but cannot be \textit{strictly} separated.
+  (You have to verify that the two sets you provide are closed and convex.) (10\%)
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  Take set $C=\{x\in\R^2\mid x_2\le 0\}$ and $D=\{x\in\R_{+}^2\mid x_1x_2\ge 1\}$.
+  \begin{itemize}
+    \item set $C$ is convex: $a, b\in C\Rightarrow\theta a_2+(1-\theta)b_2\le 0\Rightarrow \theta a+(1-\theta)b\in C$
+    \item set $C$ is closed: $\R^2\setminus C=\intr\R^2\setminus C$, boundary is $x_2=0$
+    \item set $D$ is convex: refer to \textbf{Exercise 4.(a)}
+    \item set $D$ is closed: $\R^2\setminus D=\intr\R^2\setminus D$, boundary is $x_1x_2=1$
+  \end{itemize}
+  The separating hyperplane is $x_2=0$, and no strict separating hyperplane exists.
+\end{proof}
+
+% Exercise 8
+\begin{exercise}
+  Copositive matrices. A matrix $X\in\symm^n$ is called copositive if $z^TXz\ge 0$ for all $z\succeq 0\in\R^n$.
+  Verify that the set of copositive matrices is a proper cone. Find its dual cone. (10\%)
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  $X$ is a cone trivially, now check four requirements of a proper cone.
+  \begin{itemize}
+    \item convex and closed: the set of all copositive matrices can be expressed by intersection of infinite closed halfspaces, \ie $\bigcap_{\forall z\succ 0}\{X\in\symm^n\mid z^TXz=\sum_{ij}z_iz_jX_{ij}\ge 0\}$. Note that intersection of closed halfspaces must be convex and closed.
+    \item solid: $K$ includes positive semidefinite cone; hence has interior
+    \item pointed: $X\in K, -X\in K\Rightarrow z^TXz=0\;\text{for all}\;z\succeq 0\Rightarrow X=0$
+  \end{itemize}
+  The dual cone of the origin cone is the set of normal vectors of all homogeneous halfspaces containing the origin cone (plus the origin). Therefore,
+  \begin{align*}
+    K^\ast=\conv\{zz^T\mid z\succeq 0\}
+  \end{align*}
+\end{proof}
+
+% Exercise 9
+\begin{exercise}
+  Properties of dual cones. Let $K^\ast$ be the dual cone of a convex cone $K$, as defined in (2.19) of the textbook by Boyd and Vandenberghe. Prove the following. (25\%)
+  \begin{enumerate}[label=(\alph*)]
+    \item $K^\ast$ is indeed a convex cone.
+    \item Two sets $K_1 \subseteq K_2$ implies $K_2^\ast \subseteq K_1^\ast$
+    \item $K^\ast$ is closed
+    \item If $K$ has nonempty interior, then $K^\ast$ is pointed
+    \item $K^{\ast\ast}$ is the closure of $K$. (Hence if $K$ is closed, $K^{\ast\ast}=K$)
+  \end{enumerate}
+\end{exercise}
+\begin{proof}
+  Dual cone definition: $K^\ast=\{y\mid x^Ty\ge 0\;\text{for all}\;x\in K\}$ where $K$ is a cone.
+  \begin{enumerate}[label=(\alph*)]
+    \item $K^\ast$ is the intersection of homogeneous halfspaces $\Rightarrow K^\ast$ is a convex cone
+    \item $y\in K_2^\ast\Rightarrow x^Ty\ge 0$ for all $x\in K_2\Rightarrow x^Ty\ge 0$ for all $x\in K_1\Rightarrow y\in K_1^\ast$\\
+          Hence, $K_1 \subseteq K_2\Rightarrow K_2^\ast \subseteq K_1^\ast$.
+    \item $K^\ast$ is the intersection of closed halfspaces $\Rightarrow K^\ast$ is a closed
+    \item $\begin{aligned}[t]
+            K^\ast\;\text{is not pointed}\;
+                &\Rightarrow y\in K^\ast, -y\in K^\ast, y\ne 0\\
+                &\Rightarrow x^Ty\ge 0, -x^Ty\ge 0, y\ne 0\;\text{for all}\;x\in K\\
+                &\Rightarrow x^Ty=0, y\ne 0\;\text{for all}\;x\in K\\
+                &\Rightarrow K\;\text{has empty interior}
+            \end{aligned}$\\
+          Hence, K has nonempty interior $\Rightarrow K^\ast$ is pointed.
+    \item The intersection of all homogeneous halfspaces containing convex cone $K$ is the closure of $K$. Hence,\\
+          $\cl K=\bigcap_{y\in K^\ast}\{x\mid y^Tx\ge 0\}=\{x\mid y^Tx\ge 0\;\text{for all}\;y\in K^\ast\}=K^{\ast\ast}$\qedhere
+  \end{enumerate}
+\end{proof}
+
+\end{document}

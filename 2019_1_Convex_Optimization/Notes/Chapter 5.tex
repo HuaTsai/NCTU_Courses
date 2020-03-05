@@ -1,0 +1,553 @@
+\chapter{Duality}
+
+% 5.1
+\section{The Lagrange dual function}
+
+% 5.1.1
+\subsection{The Lagrangian}
+The optimization problem from \eqref{eq:4.1}
+\begin{align}
+  \text{minimize\;\;}\quad& f_0(x)\nonumber\\
+  \text{subject to}  \quad& f_i(x)\le 0,\;i=1,\dots,m\label{eq:5.1}\\
+                          & h_i(x) =  0,\;i=1,\dots,p\nonumber
+\end{align}
+with variable $x\in\R^n$, $\D=\bigcap_{i=0}^m\dom f_i\;\cap\;\bigcap_{i=0}^p\dom h_i$ is not empty, and optimal value is $p^\ast$.\par
+We define \textit{Lagrangian} $L:\R^n\times \R^m\times \R^p\rightarrow\R$ associated with \eqref{eq:5.1} as
+\begin{align*}
+  L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^m\lambda_if_i(x)+\sum_{i=1}^p\nu_ih_i(x)
+\end{align*}
+with $\dom L=\D\times \R^m\times\R^p$.
+\begin{itemize}
+  \item $\lambda_i$ is \textit{Lagrange multiplier} associated with the $i$th inequality constraints
+  \item $\nu_i$ is \textit{Lagrange multiplier} associated with the $i$th equality constraints
+  \item $\lambda$ and $\nu$ are \textit{dual variables} or \textit{Lagrange multiplier vectors}
+\end{itemize}
+
+% 5.1.2
+\subsection{The Lagrange dual function}
+We define \textit{Lagrange dual function} $g:\R^m\times\R^p\rightarrow\R$ as
+\begin{align*}
+  g(\lambda,\nu)=\inf_{x\in\D}L(x,\lambda,\nu)=\inf_{x\in\D}\left(f_0(x)+\sum_{i=1}^m\lambda_if_i(x)+\sum_{i=1}^p\nu_ih_i(x)\right)
+\end{align*}
+where $\lambda\in\R^m$ and $\nu\in\R^p$.
+\begin{itemize}
+  \item when the Lagrangian is unbounded below in $x$, the dual function takes on $-\infty$
+  \item the dual function is concave since it is the pointwise infimum of affine functions
+\end{itemize}
+
+% 5.1.3
+\subsection{Lower bounds on optimal value}
+For any $\lambda\succeq 0$, any $\nu$ and optimal value $p^\ast$ in \eqref{eq:5.1} we have
+\begin{align}
+  g(\lambda,\nu)\le p^\ast\label{eq:5.2}
+\end{align}
+\begin{proof}
+  Suppose $\tilde{x}$ is a feasible point, \ie $f_i(\tilde{x})\le 0$ and $h_i(\tilde{x})=0$, then
+  \begin{align*}
+    \sum_{i=1}^m\lambda_if_i(\tilde{x})+\sum_{i=1}^p\nu_ih_i(\tilde{x})\le 0
+  \end{align*}
+  where $\lambda\succeq 0$, therefore
+  \begin{align*}
+    L(\tilde{x},\lambda,\nu)=f_0(\tilde{x})+\sum_{i=1}^m\lambda_if_i(\tilde{x})+\sum_{i=1}^p\nu_ih_i(\tilde{x})\le f_0(\tilde{x})
+  \end{align*}
+  Hence, we have $g(\lambda,\nu)=\inf_{x\in\D}L(x,\lambda,\nu)\le L(\tilde{x},\lambda,\nu)\le f_0(\tilde{x})$ which leads to \eqref{eq:5.2}
+\end{proof}
+\begin{itemize}
+  \item \eqref{eq:5.2} is vacuous when $g(\lambda,\nu)=-\infty$
+  \item The dual function $g(\lambda,\nu)$ gives a nontrivial lower bound on $p^\ast$ only when $\lambda\succeq 0$ and $(\lambda,\nu)\in\dom g$, and for the sufficient pair $(\lambda,\nu)$ is called \textit{dual feasible}.
+\end{itemize}
+
+% 5.1.4
+\subsection{Linear approximation interpretation}
+Add in the future.
+
+% 5.1.5
+\subsection{Examples}
+\subsubsection{Least-squares solution of linear equations}
+\begin{align}
+  \text{minimize\;\;}\quad& x^Tx\nonumber\\
+  \text{subject to}  \quad& Ax=b\label{eq:5.5}
+\end{align}
+where $A\in\R^{p\times n}$\par
+The Lagrangian is $L(x,\nu)=x^Tx+\nu^T(Ax-b)$ with domain $\R^n\times\R^p$, and the dual function is $g(\nu)=\inf_x{L(x,\nu)}$.
+Since $L(x,\nu)$ is a convex quadratic function of $x$, the optimal condition is
+\begin{align*}
+  \nabla_xL(x,\nu)|_{x=x^\ast}=2x^\ast+A^T\nu=0
+\end{align*}
+which yields $x^\ast=-\frac{1}{2}A^T\nu$, therefore $g(\nu)=L(x^\ast,\nu)=-\frac{1}{4}\nu^TAA^T\nu-b^T\nu$ which is a concave quadratic function with domain $\R^p$.\par
+The lower bound property \eqref{eq:5.2} states that for any $\nu\in\R^p$, we have
+\begin{align*}
+  -\frac{1}{4}\nu^TAA^T\nu-b^T\nu\le\inf\{x^Tx\mid Ax=b\}
+\end{align*}
+
+\subsubsection{Standard form LP}
+\begin{align}
+  \text{minimize\;\;}\quad& c^Tx\nonumber\\
+  \text{subject to}  \quad& Ax=b\label{eq:5.6}\\
+                          & x\succeq 0\nonumber
+\end{align}
+The $n$ inequalities are $f_i(x)=-x_i\le 0$, and the Lagrangian becomes
+\begin{align*}
+  L(x,\lambda,\nu)=c^Tx-\sum_{i=1}^n\lambda_ix_i+\nu^T(Ax-b)=-b^T\nu+(c+A^T\nu-\lambda)^Tx
+\end{align*}
+The dual function is
+\begin{align*}
+  g(\lambda,\nu)=\inf_xL(x,\lambda,\nu)=-b^T\nu+\inf_x(c+A^T\nu-\lambda)^Tx
+\end{align*}
+Note that a linear function is bounded below only when it is identically zero, \ie
+\begin{align*}
+  g(\lambda,\nu)=
+  \begin{cases}
+    -b^T\nu, &c+A^T\nu-\lambda=0\\
+    -\infty, &\text{otherwise}
+  \end{cases}
+\end{align*}
+The lower bound property \eqref{eq:5.2} is nontrivial only when $\lambda\succeq 0$ and $A^T\nu+c=\lambda\succeq 0$.
+When this occurs, $-b^T\nu$ is a lower bound on the optimal value of the LP \eqref{eq:5.6}.
+
+\subsubsection{Two-way partitioning problem}
+Consider the nonconvex problem
+\begin{align}
+  \text{minimize\;\;}\quad& x^TWx\nonumber\\
+  \text{subject to}  \quad& x_i^2=1,\;i=1,\dots,n\label{eq:5.7}
+\end{align}
+where $W\in\symm^n$.\par
+For large $n$, this problem is difficult to solve since the feasible set grows exponentially.
+We can interpret the problem in another way.
+\begin{itemize}
+  \item partition the feasible set: $\{1,\dots,n\}=\{i\mid x_i=-1\}\cup\{i\mid x_i=1\}$
+  \item view $W_ij$ as the cost of having elements $i$ and $j$ in the same partition
+  \item view $-W_ij$ as the cost of having elements $i$ and $j$ in the different partition
+  \item view $x^TWx$ as total cost over all pairs of elements
+\end{itemize}
+The Lagrangian is
+\begin{align*}
+  L(x,\nu)=x^TWx+\sum_{i=1}^n\nu_i(x_i^2-1)=x^T(W+\diag(\nu))x-\ones^T\nu
+\end{align*}
+The dual function is
+\begin{align*}
+  g(\nu)=\inf x^T(W+\diag(\nu))x-\ones^T\nu=
+    \begin{cases}
+      -\ones^T\nu, &W+\diag(\nu)\succeq 0\\
+      -\infty,     &\text{otherwise}
+    \end{cases}
+\end{align*}
+We can get the bound on the optimal value $p^\ast$.
+For example, choose $\nu=-\lambda_{\min}(W)\ones$ which is dual feasible since $W+\diag(\nu)=W-\lambda_{\min}(W)I\succeq 0$.
+Therefore,
+\begin{align}
+  p^\ast\ge -\ones^T\nu=n\lambda_{\min}(W)\label{eq:5.8}
+\end{align}
+\begin{remark}
+  Obtain the lower bound without using Lagrange dual function.\\
+  Modify the problem
+  \begin{align}
+    \text{minimize\;\;}\quad& x^TWx\nonumber\\
+    \text{subject to}  \quad& \sum_{i=1}^nx_i^2=n\label{eq:5.9}
+  \end{align}
+  The problem \eqref{eq:5.7} imply the constraint in \eqref{eq:5.9}.
+  Therefore, optimal value of \eqref{eq:5.9} is a lower bound on optimal value of \eqref{eq:5.7}, \ie $n\lambda_{\min}(W)\le p^\ast$.
+\end{remark}
+
+% 5.1.6
+\subsection{The Lagrange dual function and conjugate functions}
+Add in the future.
+\subsubsection{Equality constrained norm minimization}
+Add in the future.
+\subsubsection{Entropy maximization}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+Add in the future.
+\subsubsection{Minimum volume covering ellipsoid}
+Add in the future.
+
+% 5.2
+\section{The Lagrange dual problem}
+The Lagrange dual function gives us a lower bound on the optimal value $p^\ast$. The problem
+\begin{align}
+  \text{maximize\;}\quad& g(\lambda,\nu)\nonumber\\
+  \text{subject to}\quad& \lambda\succeq 0\label{eq:5.16}
+\end{align}
+is therefore called \textit{Lagrange dual problem} associated with the problem \eqref{eq:5.1}.
+\begin{itemize}
+  \item problem \eqref{eq:5.1} is called the \textit{primal problem}
+  \item a pair $(\lambda,\nu)$ is \textit{dual feasible} ($\lambda\succeq 0$ and $g(\lambda,\nu)>-\infty$) implies it is feasible for the dual problem
+  \item $(\lambda^\ast,\nu^\ast)$ is \textit{dual optimal} or \textit{optimal Lagrange multipliers}
+  \item \eqref{eq:5.16} is a convex optimization problem since it maximize a concave function with convex constraint functions (even if \eqref{eq:5.1} is not convex)
+\end{itemize}
+
+% 5.2.1
+\subsection{Making dual constraints explicit}
+It is common for the domain of the dual function
+\begin{align*}
+  \dom g=\{(\lambda,\nu)\mid g(\lambda,\nu)>-\infty\}
+\end{align*}
+to have dimension smaller than $m + p$.
+We identify the affine hull of $\dom g$ and describe it as a set of linear equality constraints.
+\subsubsection{Lagrange dual of standard form LP}
+The standard form LP is
+\begin{align}
+  \text{minimize\;\;}\quad& c^Tx\nonumber\\
+  \text{subject to}  \quad& Ax=b\label{eq:5.17}\\
+                          & x\succeq 0\nonumber
+\end{align}
+And the Lagrange dual problem of the standard form LP \eqref{eq:5.17} is
+\begin{align}
+  \text{maximize\;}\quad& g(\lambda,\nu)=
+    \begin{cases}
+      -b^T\nu, &A^T\nu+c-\lambda=0\\
+      -\infty, &\text{otherwise}
+    \end{cases}\label{eq:5.18}\\
+  \text{subject to}\quad& \lambda\succeq 0\nonumber
+\end{align}
+Problem \eqref{eq:5.18} is equivalent to
+\begin{align}
+  \text{maximize\;}\quad& -b^T\nu\nonumber\\
+  \text{subject to}\quad& A^T\nu+c-\lambda=0\label{eq:5.19}\\
+                        & \lambda\succeq 0\nonumber
+\end{align}
+Thus equivalent to
+\begin{align}
+  \text{maximize\;}\quad& -b^T\nu\nonumber\\
+  \text{subject to}\quad& A^T\nu+c\succeq 0\label{eq:5.20}
+\end{align}
+which is an LP in inequality form. With abuse of the terminology, we call \eqref{eq:5.19} or \eqref{eq:5.20} is the Lagrange dual of \eqref{eq:5.17}.
+
+\subsubsection{Lagrange dual of inequality form LP}
+The inequality form LP is
+\begin{align}
+  \text{minimize\;\;}\quad& c^Tx\nonumber\\
+  \text{subject to}  \quad& Ax\preceq b\label{eq:5.21}
+\end{align}
+The Lagrangian is
+\begin{align*}
+  L(x,\lambda)=c^Tx+\lambda^T(Ax-b)=-b^T\lambda+(A^T\lambda+c)^Tx
+\end{align*}
+The dual function is
+\begin{align*}
+  g(\lambda)=\inf_xL(x,\lambda)=-b^T\lambda+\inf_x(A^T\lambda+c)^Tx=
+  \begin{cases}
+    -b^T\lambda, &A^T\lambda+c=0\\
+    -\infty    , &\text{otherwise}
+  \end{cases}
+\end{align*}
+And the Lagrange dual of the inequality form LP \eqref{eq:5.21} is
+\begin{align}
+  \text{maximize\;}\quad& -b^T\lambda\nonumber\\
+  \text{subject to}\quad& A^T\lambda+c=0\label{eq:5.22}\\
+                        & \lambda\succeq 0\nonumber
+\end{align}
+which is an LP in standard form.
+Note that the dual of a standard form LP is an inequality form LP, and vice versa.
+
+% 5.2.2
+\subsection{Weak duality}
+The \textit{weak duality} property
+\begin{align}
+  d^\ast\le p^\ast\label{eq:5.23}
+\end{align}
+where $d^\ast$ is the optimal value of the Lagrange dual problem.\par
+The inequality \eqref{eq:5.23} holds when $d^\ast$ and $p^\ast$ are infinite.
+\begin{itemize}
+  \item if the primal problem is unbounded below, then the Lagrange dual problem is infeasible
+        \begin{align*}
+          p^\ast=-\infty\Rightarrow d^\ast=-\infty
+        \end{align*}
+  \item if the Lagrange dual problem is unbounded above, then the primal problem is infeasible
+        \begin{align*}
+          d^\ast=\infty\Rightarrow p^\ast=\infty
+        \end{align*}
+  \item the difference $p^\ast-d^\ast$ is called \textit{optimal duality gap} of the original problem
+  \item the \textit{optimal duality gap} is always nonnegative
+  \item \eqref{eq:5.23} can be used to find a lower bound on the optimal value of a difficult problem
+\end{itemize}
+Note that the dual problem of of \eqref{eq:5.7} is an SDP,
+\begin{align*}
+  \text{maximize\;}\quad& -\ones^T\nu\\
+  \text{subject to}\quad& W+\diag(\nu)\succeq 0
+\end{align*}
+
+% 5.2.3
+\subsection{Strong duality and Slater's constraint qualification}
+The \textit{strong duality} property is the inequality
+\begin{align}
+  d^\ast=p^\ast\label{eq:5.24}
+\end{align}
+holds, \ie \textit{optimal duality gap} is zero.
+\begin{itemize}
+  \item strong duality does not, in general, hold
+  \item if the primal problem \eqref{eq:5.1} is convex, \ie
+        \begin{align}
+          \text{minimize\;\;}\quad& f_0(x)\nonumber\\
+          \text{subject to}  \quad& f_i(x)\le 0,\;i=1,\dots,m\label{eq:5.25}\\
+                                  & Ax=b\nonumber
+        \end{align}
+        where $f_0,\dots,f_m$ are convex, we usually (but not always) have strong duality
+  \item \textit{constraint qualifications}: strong duality holds under a condition, beyond convexity
+\end{itemize}
+\textit{Slater's condition}: There exists an $x\in\relintr\D$ such that
+\begin{align}
+  f_i(x)<0,\;i=1,\dots,m,\;Ax=b\label{eq:5.26}
+\end{align}
+then the point is called \textit{strictly feasible}.
+Slater's theorem states that strong duality holds, if Slater's condition holds (and the problem is convex). And we prove it in \textcolor{red}{\S 5.3.2}.\\
+Refined Slater's condition: $f_1,\dots,f_k$ are affine, there exists an $x\in\relintr\D$ such that
+\begin{align}
+  f_i(x)\le 0,\;i=1,\dots,k,\;f_i(x)<0,\;i=k+1,\dots,m,\;Ax=b\label{eq:5.27}
+\end{align}
+It reduces to feasibility when the constraints are all linear and $\dom f_0$ is open.
+
+% 5.2.4
+\subsection{Examples}
+\subsubsection{Least-squares solution of linear equations}
+Recall the problem \eqref{eq:5.5}
+\begin{align*}
+  \text{minimize\;\;}\quad& x^Tx\\
+  \text{subject to}  \quad& Ax=b
+\end{align*}
+And its dual problem (unconstrained concave quadratic maximization problem)
+\begin{align*}
+  \text{maximize\;}\quad& -\frac{1}{4}\nu^TAA^T\nu-b^T\nu
+\end{align*}
+Slater's condition is that the primal problem is feasible, so $p^\ast=d^\ast$ provided $b\in\range(A)$.
+In fact, strong duality holds even if $p^\ast=\infty$ ($b\notin\range(A)$).
+This leads to that there is a $z$ with $A^Tz=0,\;b^Tz\neq 0$, and dual function is unbounded above along $\{tz\mid t\in\R\}$, so $d^\ast=\infty$.
+
+\subsubsection{Lagrange dual of LP}
+By the weaker Slater's condition, strong duality holds for any LP (both standard and inequality form) provided the primal problem is feasible.
+Apply the result to the duals, strong duality holds for any LP provided the dual problem is feasible.
+Therefore, strong duality only fails when both the primal and dual problems are infeasible.
+
+\subsubsection{Lagrange dual of QCQP}
+\subsubsection{Entropy maximization}
+\subsubsection{Minimum volume covering ellipsoid}
+\subsubsection{A nonconvex quadratic problem with strong duality}
+
+% 5.2.5
+\subsection{Mixed strategies for matrix games}
+
+% 5.3
+\section{Geometric interpretation}
+\subsection{Weak and strong duality via set of values}
+\subsection{Proof of strong duality under constraint qualification}
+\subsection{Multicriterion interpretation}
+
+% 5.4
+\section{Saddle-point interpretation}
+\subsection{Max-min characterization of weak and strong duality}
+\subsection{Saddle-point interpretation}
+\subsection{Game interpretation}
+\subsection{Price or tax interpretation}
+
+% 5.5
+\section{Optimality conditions}
+Remind that we do not assume the problem \eqref{eq:5.1} is convex.
+
+% 5.5.1
+\subsection{Certificate of suboptimality and stopping criteria}
+If we can find a dual feasible $(\lambda,\nu)$, then we establish a lower bound of the primal problem.
+We call $(\lambda,\nu)$ provides a \textit{proof} or \textit{certificate} that $p^\ast\ge g(\lambda,\nu)$.
+\begin{itemize}
+  \item strong duality means there exist arbitrarily good certificates
+  \item Dual feasible points allow us to bound how suboptimal (\S\ref{subsec:4.1.1}) a given feasible point is without knowing $p^\ast$.
+        If $x$ is primal feasible and $(\lambda,\nu)$ is dual feasible, then we have
+        \begin{align*}
+          \begin{cases}
+            f_0(x)\le p^\ast+f_0(x)-g(\lambda,\nu)\\
+            g(\lambda,\nu)\ge d^\ast-(f_0(x)-g(\lambda,\nu))
+          \end{cases}
+        \end{align*}
+        \ie $x$ and $(\lambda,\nu)$ are $\epsilon$-suboptimal for its problem where $\epsilon=f_0(x)-g(\lambda,\nu)$.
+  \item the difference $f_0(x)-g(\lambda,\nu)$ is called the \textit{duality gap} with the two feasible points
+  \item a primal dual feasible pair $x$, $(\lambda,\nu)$ localizes the optimal value of the problems
+        \begin{align*}
+          p^\ast\in [g(\lambda,\nu),f_0(x)],\;d^\ast\in [g(\lambda,\nu),f_0(x)]
+        \end{align*}
+        the width of the interval is the duality gap
+  \item If the duality gap is zero, then both $x$ and $(\lambda,\nu)$ are optimal.
+        Therefore, we can think of $(\lambda,\nu)$ as a certificate that proves $x$ is optimal, and vice versa.
+\end{itemize}
+The nonheuristic stopping criteria in the optimization algorithm
+\begin{align*}
+  f_0(x^{(k)})-g(\lambda^{(k)},\nu^{(k)})\le\epsilon_{abs}
+\end{align*}
+where $\epsilon_{abs}>0$ guarantees that when the algorithm terminates, $x^{(k)}$ is $\epsilon_{abs}$-suboptimal with $(\lambda^{(k)},\nu^{(k)})$ as a certificate.
+Strong duality must hold if this method is to work for arbitrarily small tolerances $\epsilon_{abs}$.\par
+A similar condition is to use relative accuracy $\epsilon_{rel}>0$. If
+\begin{align*}
+  g(\lambda^{(k)},\nu^{(k)})>0,\;\frac{f_0(x^{(k)})-g(\lambda^{(k)},\nu^{(k)})}{g(\lambda^{(k)},\nu^{(k)})}\le\epsilon_{rel}
+\end{align*}
+holds, or
+\begin{align*}
+  f_0(x^{(k)})<0,\;\frac{f_0(x^{(k)})-g(\lambda^{(k)},\nu^{(k)})}{-f_0(x^{(k)})}\le\epsilon_{rel}
+\end{align*}
+holds, then $p^\ast\ne 0$ and the relative error
+\begin{align*}
+  \frac{f_0(x^{(k)})-p^\ast}{|p^\ast|}
+\end{align*}
+is guaranteed to be less than or equal to $\epsilon_{rel}$.
+
+% 5.5.2
+\subsection{Complementary slackness}
+\label{subsec:5.5.2}
+Suppose strong duality holds, then
+\begin{align*}
+  f_0(x^\ast)&=   g(\lambda^\ast,\nu^\ast) &\text{(strong duality)}\\
+             &=   \inf_{x}\left(f_0(x)+\sum_{i=1}^m\lambda_i^\ast f_i(x)+\sum_{i=1}^p\nu_i^\ast h_i(x)\right) &\text{(definition)}\\
+             &\le f_0(x^\ast)+\sum_{i=1}^m\lambda_i^\ast f_i(x^\ast)+\sum_{i=1}^p\nu_i^\ast h_i(x^\ast) &\text{(when $x=x^\ast$)}\\
+             &\le f_0(x^\ast)
+\end{align*}
+the fourth line is derived by
+\begin{itemize}
+  \item $(\lambda^\ast,\nu^\ast)$ is dual feasible, then $\lambda^\ast\succeq 0$
+  \item $x^\ast$ is optimal, then $f_i(x^\ast)\le 0,\;i=1,\dots,m,\;h_i(x^\ast)=0,\;i=1,\dots,p$
+\end{itemize}
+Therefore, the last two inequalities becomes equalities, and we have some conclusions here
+\begin{itemize}
+  \item $x^\ast$ minimizes $L(x,\lambda^\ast,\nu^\ast)$ over $x$ ($L$ can have other minimizers)
+  \item the \textit{complementary slackness} condition
+        \begin{align}
+          \lambda_i^\ast f_i(x^\ast)=0,\;i=1,\dots,m\label{eq:5.48}
+        \end{align}
+  \item when strong duality holds, the \textit{complementary slackness} condition holds for any primal optimal $x^\ast$ and dual optimal $(\lambda^\ast,\nu^\ast)$
+\end{itemize}
+We can express the complementary slcakness condition as
+\begin{align*}
+  \lambda_i^\ast>0\Rightarrow f_i(x^\ast)=0
+\end{align*}
+or, equivalently
+\begin{align*}
+  f_i(x^\ast)<0\Rightarrow\lambda_i^\ast=0
+\end{align*}
+This means the $i$th optimal Lagrange multiplier is zero unless the $i$th constraint is active at the optimum.
+
+% 5.5.3
+\subsection{KKT optimality conditions}
+\label{subsec:5.5.3}
+We now assume that $f_0,\dots,f_m,h_1,\dots,h_p$ are differentiable (and therefore have open domains).
+
+\subsubsection{KKT conditions for nonconvex problems}
+Let $x^\ast$ and $(\lambda^\ast,\nu^\ast)$ be any primal and dual optimal points.
+Since $x^\ast$ minimizes $L(x,\lambda^\ast,\nu^\ast)$ as discussed in \S\ref{subsec:5.5.2}, its gradient must vanish at $x^\ast$.\par
+Therefore, we have \textit{Karush-Kuhn-Tucher} (KKT) conditions.
+\begin{align}
+  f_i(x^\ast)               & \le 0,\;i=1,\dots,m\nonumber\\
+  h_i(x^\ast)               &   = 0,\;i=1,\dots,p\nonumber\\
+  \lambda_i^\ast            & \ge 0,\;i=1,\dots,m\label{eq:5.49}\\
+  \lambda_i^\ast f_i(x^\ast)&   = 0,\;i=1,\dots,m\nonumber\\
+  \nabla f_0(x^\ast)+\sum_{i=1}^m\lambda_i^\ast\nabla f_i(x^\ast)+\sum_{i=1}^p\nu_i^\ast\nabla h_i(x^\ast)&=0\nonumber
+\end{align}
+To summarize, for \textit{any} optimization problems with
+\begin{enumerate}
+  \item differentiable objective and constraint functions
+  \item strong duality holds
+\end{enumerate}
+then any pair of primal and dual optimal points must satisfy the KKT conditions \eqref{eq:5.49}.
+
+\subsubsection{KKT conditions for convex problems}
+KKT conditions become sufficient for optimal points when the primal problem is convex, \ie if $f_i$ are convex, $h_i$ are affine, and any points $\tilde{x}$, $\tilde{\lambda}$, $\tilde{\nu}$ satisfy
+\begin{align*}
+  f_i(\tilde{x})                  & \le 0,\;i=1,\dots,m\\
+  h_i(\tilde{x})                  &   = 0,\;i=1,\dots,p\\
+  \tilde{\lambda_i}               & \ge 0,\;i=1,\dots,m\\
+  \tilde{\lambda_i} f_i(\tilde{x})&   = 0,\;i=1,\dots,m\\
+  \nabla f_0(\tilde{x})+\sum_{i=1}^m\tilde{\lambda}_i\nabla f_i(\tilde{x})+\sum_{i=1}^p\tilde{\nu}_i\nabla h_i(\tilde{x})&=0
+\end{align*}
+then $\tilde{x}$ and $(\tilde{\lambda},\tilde{\nu})$ are primal and dual optimal with zero duality gap.
+\begin{proof}
+  First two conditions states that $\tilde{x}$ is primal feasible.
+  Since $\tilde{\lambda}\succeq 0$, $L(x,\tilde{\lambda},\tilde{\nu})$ is convex in $x$.
+  Thus the last condition states that $\tilde{x}$ minimizes $L(x,\tilde{\lambda},\tilde{\nu})$ over $x$.
+  We have
+  \begin{align*}
+    g(\tilde{\lambda},\tilde{\nu})
+      &= L(\tilde{x},\tilde{\lambda},\tilde{\nu})\\
+      &= f_0(\tilde{x})+\sum_{i=1}^m\tilde{\lambda}_if_i(\tilde{x})+\sum_{i=1}^p\tilde{\nu}_ih_i(\tilde{x})\\
+      &= f_0(\tilde{x})
+  \end{align*}
+  where we use the third and the fourth KKT conditions.\par
+  We show that $\tilde{x}$ and $(\tilde{\lambda},\tilde{\nu})$ have zero duality gap, and are primal and dual optimal.
+\end{proof}
+\noindent To summarize, for any \textit{convex} optimization problems with
+\begin{enumerate}
+  \item differentiable objective and constraint functions
+  \item any points that satisfy the KKT conditions
+\end{enumerate}
+the points are primal and dual optimal, and have zero duality gap.\par
+If a convex optimization problem with differentiable objective and constraint functions satisfies Slater's condition (optimal duality gap is zero), then KKT conditions provide necessary and sufficient conditions for optimality, \ie
+$x$ is optimal if and only if there exists $(\lambda,\nu)$ that satisfies KKT conditions with $x$.
+\begin{example}[\textit{Equality constrained convex quadratic minimization}]
+  Consider
+  \begin{align}
+    \text{minimize\;\;}\quad& (1/2)x^TPx+q^Tx+r \label{eq:5.50}\\
+    \text{subject to}  \quad& Ax=b\nonumber
+  \end{align}
+  where $P\in\symm_+^n$. The KKT conditions are
+  \begin{align*}
+    Ax^\ast=b,\quad Px^\ast+q+A^T\nu^\ast=0
+  \end{align*}
+  \ie
+  \begin{align*}
+    \begin{bmatrix}
+      P&A^T\\A&0
+    \end{bmatrix}
+    \begin{bmatrix}
+      x^\ast\\\nu^\ast
+    \end{bmatrix}=
+    \begin{bmatrix}
+      -q\\b
+    \end{bmatrix}
+  \end{align*}
+  Solving $x^\ast$ and $\nu^\ast$ gives the optimal primal and dual variables for \eqref{eq:5.50}.
+\end{example}
+
+\begin{example}[\textit{Water-filling}]
+  Consider
+  \begin{align*}
+    \text{minimize\;\;}\quad& -\sum_{i=1}^n\log(\alpha_i+x_i)\\
+    \text{subject to}  \quad& x\succeq 0,\;\ones^Tx=1
+  \end{align*}
+  where $\alpha_i>0$.
+  This problem arises in information theory
+  \begin{itemize}
+    \item $x_i$ represents the transmitter power allocated to $i$th channel
+    \item $\log(\alpha_i+x_i)$ gives the capacity or communication rate of the channel
+    \item then the problem is to allocate total power of one to the channels to maximize the communication rate
+  \end{itemize}
+  Introducing $\lambda^\ast\in\R^n$ and $\nu\in\R$, then the KKT conditions are
+  \begin{gather*}
+    x^\ast\succeq 0,\quad\ones^Tx=1,\quad\lambda^\ast\succeq 0,\quad\lambda_i^\ast x_i^\ast=0,\;i=1,\dots,n\\
+    -1/(\alpha_i+x_i^\ast)-\lambda_i^\ast+\nu^\ast=0,\;i=1,\dots,n
+  \end{gather*}
+  Eliminating $\lambda^\ast$,
+  \begin{gather*}
+    x^\ast\succeq 0,\quad\ones^Tx=1,\quad x_i^\ast(\nu^\ast-1/(\alpha_i+x_i^\ast))=0,\;i=1,\dots,n\\
+    \nu^\ast\ge 1/(\alpha_i+x_i^\ast),\;i=1,\dots,n
+  \end{gather*}
+\end{example}
+
+\subsection{Mechanics interpretation of KKT conditions}
+\subsection{Solving the primal problem via the dual}
+
+% 5.6
+\section{Perturbation and sensitivity analysis}
+\subsection{The perturbed problem}
+\subsection{A global inequality}
+\subsection{Local sensitivity analysis}
+
+% 5.7
+\section{Examples}
+\subsection{Introducing new variables and equality constraints}
+\subsection{Transforming the objective}
+\subsection{Implicit constraints}
+
+% 5.8
+\section{Theorems of alternatives}
+\subsection{Weak alternatives via the dual function}
+\subsection{Strong alternatives}
+\subsection{Examples}
+
+% 5.9
+\section{Generalized inequalities}
+\subsection{The Lagrange dual}
+\subsection{Optimality conditions}
+\subsection{Perturbation and sensitivity analysis}
+\subsection{Theorems of alternatives}

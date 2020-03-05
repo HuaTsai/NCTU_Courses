@@ -1,0 +1,281 @@
+%!TEX program = pdflatex
+\documentclass[12pt]{extarticle}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage{mdframed}
+\usepackage{blindtext}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue
+}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\everymath{\displaystyle}
+
+\input{../defs.tex}
+
+\title{Assignment \#1}
+\author{Shao Hua, Huang 0750727\\
+ECM5901 - Optimization Theory and Application}
+
+\begin{document}
+\maketitle
+
+% Exercise 1
+\begin{exercise}
+  Verify that the $\ell_1$-norm on $\R^n$ defined by $\|x\|_1=\Sigma_{i=1}^n|x_i|$ for $x\in\R^n$ is a norm on $\R^n$. (10\%)
+\end{exercise}
+\begin{proof}[Verify]
+  Check the four properties of a \textit{norm} function.
+  \begin{enumerate}[label=(\arabic*)]
+    \item nonnegative: $\|x\|_1=\sum_{i=1}^n|x_i|\ge 0\quad\forall x\in\R^n$
+    \item definite: $\|x\|_1=\sum_{i=1}^n|x_i|=0\Leftrightarrow x_1=x_2=\dots=x_n=0\Leftrightarrow x=0$
+    \item homogeneous: $$\|tx\|_1=\sum_{i=1}^n|tx_i|=\sum_{i=1}^n|t||x_i|=|t|\sum_{i=1}^n|x_i|=|t|\|x\|_1\quad \forall x\in \R^n, t\in\R$$
+    \item triangle inequality: $$\|x+y\|_1=\sum_{i=1}^n|x_i+y_i|\le\sum_{i=1}^n(|x_i|+|y_i|)=\|x\|_1+\|y\|_1\quad \forall x,y\in \R^n$$
+  \end{enumerate}
+  Therefore, $\ell_1$-norm is a \textit{norm}.
+\end{proof}
+
+% Exercise 2
+\begin{exercise}
+  The operator norm on $\R^{m\times n}$ induced by two norms $\|\cdot\|_a$ on $\R^m$ and $\|\cdot\|_b$ on $\R^n$ is defined by
+  $$\|X\|_{a,b}=\sup\{\|Xu\|_a\mid\|u\|_b\le 1\}$$
+  for $X\in\R^{m\times n}$. Verify that
+  $$\|X\|_{1,1}=\max_{j=1,\dots,n}\sum_{i=1}^n|X_{ij}|.$$ (10\%)
+\end{exercise}
+\newpage
+\begin{proof}[Verify]
+  Separate the verify into two parts.
+  \begin{enumerate}[label=(\alph*)]
+    \item $\|X\|_{1,1}\le\max_{j=1,\dots,n}\sum_{i=1}^n|X_{ij}|$\\
+      Let $X=[X_1\quad X_2\quad\dots\quad X_n]$ where $X_1,X_2,\dots,X_n$ are column vectors of $X$
+      \begin{align*}
+        \|X\|_{1,1} &=   \sup\{\|Xu\|_1\mid\|u\|_1\le 1\}\\
+                    &=   \sup\left\{\|\sum_{i=1}^nX_iu_i\|_1\mid\|u\|_1\le 1\right\}\\
+                    &\le \sup\left\{\sum_{i=1}^n\|X_iu_i\|_1\mid\|u\|_1\le 1\right\}\quad\text{(triangle inequality of norm)}\\
+                    &=   \sup\left\{\sum_{i=1}^n\|X_i\|_1|u_i|\mid\|u\|_1\le 1\right\}\quad\text{(homogeneous of norm)}\\
+                    &\le \sup\left\{\max\{\|X_1\|_1,\|X_2\|_1,\dots,\|X_n\|_1\}\sum_{i=1}^n|u_i|\mid\|u\|_1\le 1\right\}\\
+                    &=   \sup\{\max\{\|X_1\|_1,\|X_2\|_1,\dots,\|X_n\|_1\}\|u\|_1\mid\|u\|_1\le 1\}\\
+                    &=   \max\{\|X_1\|_1,\|X_2\|_1,\dots,\|X_n\|_1\}\\
+                    &=   \max\left\{\sum_{i=1}^n|X_{i1}|,\sum_{i=1}^n|X_{i2}|,\dots,\sum_{i=1}^n|X_{in}|\right\} = \max_{j=1,\dots,n}\sum_{i=1}^n|X_{ij}|
+      \end{align*}
+    \item $\|X\|_{1,1}\ge\max_{j=1,\dots,n}\sum_{i=1}^n|X_{ij}|$
+      \begin{align*}
+        \|X\|_{1,1} = \sup\{\|Xu\|_1\mid\|u\|_1\le 1\} \ge \|Xu\|_1
+      \end{align*}
+      We choose $u=e_k$ where $k=\arg\max_j\left\{\sum_{i=1}^n|X_{i1}|,\dots,\sum_{i=1}^n|X_{ij}|,\dots,\sum_{i=1}^n|X_{in}|\right\}$\\
+      Therefore, $\|u\|_1=1$ is under the constraint, and
+      \begin{align*}
+        \|X\|_{1,1} &\ge \|Xu\|_1\\
+                    &=   |X_{1k}|+|X_{2k}|+\dots+|X_{nk}|\\
+                    &=   \sum_{i=1}^n|X_{ik}|\\
+                    &=   \max\left\{\sum_{i=1}^n|X_{i1}|,\sum_{i=1}^n|X_{i2}|,\dots,\sum_{i=1}^n|X_{in}|\right\} = \max_{j=1,\dots,n}\sum_{i=1}^n|X_{ij}|
+      \end{align*}
+    \item From (a) and (b), we know that $\|X\|_{1,1}=\max_{j=1,\dots,n}\sum_{i=1}^n|X_{ij}|$.\qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 3
+\begin{exercise}
+  Show that the dual norm of $\ell_1$-norm is the $\ell_\infty$-norm. (10\%)
+\end{exercise}
+\begin{proof}
+  Separate the proof into two parts. ($z, x\in \R^n$)
+  \begin{enumerate}[label=(\alph*)]
+    \item $\|z\|_\ast\le \|z\|_\infty$
+      \begin{align*}
+        \|z\|_\ast &=   \sup\{z^Tx\mid\|x\|_1\le 1\}\\
+                   &=   \sup\left\{\sum_{i=1}^n(z_ix_i)\mid\|x\|_1\le 1\right\}\\\\
+                   &\le \sup\left\{\sum_{i=1}^n(|z_i||x_i|)\mid\|x\|_1\le 1\right\}\\\\
+                   &=   \sup\left\{\max\{z_1,z_2,\dots,z_n\}\sum_{i=1}^n|x_i|\mid\|x\|_1\le 1\right\}\\\\
+                   &=   \max\{z_1,z_2,\dots,z_n\} = \|z\|_\infty
+      \end{align*}
+    \item $\|z\|_\ast\ge \|z\|_\infty$
+      \begin{align*}
+        \|z\|_\ast = \sup\{z^Tx\mid\|x\|_1\le 1\} \ge z^Tx
+      \end{align*}
+      We choose $x=\sign(z_k)e_k$ where $k=\arg\max_i \{z_1,\dots,z_i,\dots,z_n\}$\\
+      Therefore, $\|x\|_1=1$ is under the constraint, and
+      \begin{align*}
+        \|z\|_\ast&\ge z^Tx\\
+                  &=   z^T\sign(z_k)e_k=|z_k|\\
+                  &=   \max\{z_1,z_2,\dots,z_n\} = \|z\|_\infty
+      \end{align*}
+    \item From (a) and (b), we know that $\|z\|_\ast=\|z\|_\infty$.\qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 4
+\begin{exercise}
+  The trace of a square matrix $A=[a_{ij}]\in\R^{n\times n}$ is defined as $\tr(A)=\sum_{i=1}^n a_{ii}$. Show that
+  \begin{enumerate}[label=(\alph*)]
+    \item $\tr(AB) = \tr(BA)$ for $A, B \in \R^{n\times n}$. (5\%)
+    \item $\tr(tA+B) = t\tr(A) + \tr(B)$ for $A, B \in \R^{n\times n}$ and $t\in\R$. (5\%)
+  \end{enumerate}
+\end{exercise}
+\begin{proof}
+  $ $
+  \begin{enumerate}[label=(\alph*)]
+    \item $\tr(AB) = \sum_{i=1}^n\left(\sum_{k=1}^na_{ik}b_{ki}\right) = \sum_{k=1}^n\left(\sum_{i=1}^nb_{ki}a_{ik}\right) = \tr(BA)$
+    \item $\tr(tA+B) = \sum_{i=1}^n(ta_{ii}+b_{ii}) = t\sum_{i=1}^na_{ii}+\sum_{i=1}^nb_{ii} = t\tr(A)+\tr(B)$ \qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 5
+\begin{exercise}
+  Let $\<,\>$ be the inner product on $\R^n$. Prove the Cauchy-Schwarz inequality that for $x, y\in\R^n$, $|\<x,y\>|^2\le\<x,x\>\<y,y\>$. (10\%)
+\end{exercise}
+\begin{proof}
+  We can easily know that $\<x,x\>=|x|^2=\|x\|_2^2$ where $x\in\R^n$.\\
+  The proof starts from equation $\|x-\frac{\<x,y\>}{\|y\|_2^2}y\|_2^2\ge 0$, and then we have
+  \begin{align*}
+    \|x-\frac{\<x,y\>}{\|y\|_2^2}y\|_2^2 
+      &= \<x-\frac{\<x,y\>}{\|y\|_2^2}y,x-\frac{\<x,y\>}{\|y\|_2^2}y\>\\
+      &= \<x,x\>-2\frac{\<x,y\>}{\|y\|_2^2}\<x,y\>+\frac{\<x,y\>\<x,y\>}{\|y\|_2^4}\<y,y\>\\
+      &= \<x,x\>-2\frac{|\<x,y\>|^2}{\|y\|_2^2}+\frac{|\<x,y\>|^2}{\|y\|_2^2}\\
+      &= \<x,x\>-\frac{|\<x,y\>|^2}{\|y\|_2^2}\\
+      &= \<x,x\>-\frac{|\<x,y\>|^2}{\<y,y\>} \ge 0
+  \end{align*}
+  Therefore, we can show that $|\<x,y\>|^2\le\<x,x\>\<y,y\>$
+\end{proof}
+
+% Exercise 6
+\begin{exercise}
+  Verify that Frobenious inner product on $\R^{m\times n}$ defined by
+  $$\<X,Y\>_F=\tr(X^TY)$$
+  for $X, Y\in\R^{m\times n}$ is an inner product. (10\%)
+\end{exercise}
+\begin{proof}[Verify]
+  Check the three properties of \textit{inner product}.
+  \begin{enumerate}[label=(\arabic*)]
+    \item conjugate symmetry: Since $X, Y\in \R^{m\times n}$, we have $\overline{\<X,Y\>}_F=\<X,Y\>_F$.
+      \begin{align*}
+        \<X,Y\>_F=\tr(X^TY)=\tr((X^TY)^T)=\tr(Y^TX)=\<Y,X\>_F=\overline{\<Y,X\>}_F
+      \end{align*}
+    \item linearity: $X, Y, Z\in\R^{m\times n}$, $c\in\R$
+      \begin{enumerate}[label=(\roman*)]
+        \item $\begin{aligned}[t]\<X+Z,Y\>_F &= \tr((X+Z)^TY)=\tr((X^T+Z^T)Y)=\tr(X^TY+Z^TY)\\
+                                             &= \tr(X^TY)+\tr(Z^TY)=\<X,Y\>_F+\<Z,Y\>_F\end{aligned}$
+        \item $\<cX,Y\>_F=\tr((cX)^TY)=\tr(cX^TY)=c\ \tr(X^TY)=c\<X,Y\>_F$
+      \end{enumerate}
+    \item positive-definite: $\<X,X\>_F=\tr(X^TX)=\sum_{i=1}^m\sum_{j=1}^nX_{ij}^2>0$ where $X\in\R^{m\times n}\setminus\{0\}$
+  \end{enumerate}
+  Therefore, \textit{Frobenious inner product} is an inner product
+\end{proof}
+
+% Exercise 7
+\begin{exercise}
+  Read Appendix A.4. Let $A\in \R^{m\times n}$ and $b\in \R^m$. Consider $f:\R^n\to\R$ defined by $f(x)=\|Ax-b\|_2^2$ for $x\in \R^n$. Show that
+  \begin{enumerate}[label=(\alph*)]
+    \item $\nabla f(x) = 2A^T(Ax-b)$. (10\%)
+    \item $\nabla^2f(x) = 2A^TA$. (10\%)
+  \end{enumerate}
+\end{exercise}
+\begin{proof}[Lemma 1]
+  \let\qed\relax
+  $Df(x)=A$ where $f(x)=Ax+b$ and $A\in\R^{m\times n}\ \ x,b\in\R^n$\\
+  Let $A=[A_1^T\quad A_2^T\quad\dots\quad A_n^T]$ where $A_1,A_2,\dots,A_n$ are row vectors of $A$.\\
+  We have $Df(x)_{ij}=\frac{\partial f_i(x)}{\partial x_j}=\frac{\partial (A_ix+b_i)}{\partial x_j}=A_{ij}\Rightarrow Df(x)=A$\\
+\end{proof}
+\begin{proof}[Lemma 2]
+  \let\qed\relax
+  $Df(x)=2x^T$ where $f(x)=x^Tx$ and $x\in\R^n$\\
+  We have $Df(x)_{i}=\frac{\partial f(x)}{\partial x_i}=\frac{\partial (\sum_{j=1}^n x_j^2)}{\partial x_i}=2x_i\Rightarrow Df(x)=2x^T$\\
+\end{proof}
+\begin{proof}
+  Back to exercise, we have $f(x)=\|Ax-b\|_2^2=(Ax-b)^T(Ax-b)$.\\
+  Employ chain rule to prove these equations.
+  \begin{enumerate}[label=(\alph*)]
+    \item $\nabla f(x)=Df(x)^T=\left(\frac{\partial f(x)}{\partial (Ax-b)}\frac{\partial (Ax-b)}{\partial x}\right)^T=(2(Ax-b)^TA))^T=2A^T(Ax-b)$\\
+    \item $\nabla^2 f(x)=D\nabla f(x)=\frac{\partial (2A^T(Ax-b))}{\partial x}=\frac{\partial (2A^TAx-2A^Tb)}{\partial x}=2A^TA$ \qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 8
+\begin{exercise}
+  For a symmetric matrix $A\in\R^{n\times n}$, it has an eigenvalue (spectral) decomposition
+  $$A=Q\Lambda Q^T,$$
+  where $Q\in\R^{n\times n}$ is an orthogonal matrix such that $Q^TQ=QQ^T=I$ and $\Lambda=\diag(\lambda_1,\dots,\lambda_n)$ is a diagonal matrix with entries that are eigenvalues of $A$.
+  \begin{enumerate}[label=(\alph*)]
+    \item Show that $\tr(A)=\sum_{i=1}^n\lambda_i$. (5\%)
+    \item Show that $x^TAx\ge 0$ for any $x\in\R^n$ if and only if $\lambda_i\ge 0$ for $i=1,\dots,n$. ($A$ is called positive semidefinite if all the eigenvalues $\lambda_i$ are nonnegative.) (10\%)
+    \item Let $\lambda_{\max}=\max\{\lambda_1,\dots,\lambda_n\}$ and $\lambda_{\min}=\min\{\lambda_1,\dots,\lambda_n\}$. Show that
+          $$\lambda_{\min}x^Tx\le x^TAx\le \lambda_{\max}x^Tx.$$
+          (10\%)
+  \end{enumerate}
+\end{exercise}
+\newpage
+\begin{proof}
+  $ $
+  \begin{enumerate}[label=(\alph*)]
+    \item eigenvalues are roots of the characteristic equation, \ie roots of
+      \begin{align}
+        \det(A-\lambda I)
+          & = \begin{vmatrix}
+                (a_{11}-\lambda) & a_{12} & \cdots & a_{1n}\\
+                a_{21} & (a_{22}-\lambda) & \cdots & a_{2n}\\
+                \vdots & \vdots & \ddots & \vdots \\
+                a_{n1} & a_{n2} & \cdots & (a_{nn} - \lambda)
+              \end{vmatrix}\nonumber\\
+          & = (-1)^n\lambda^n+(-1)^{n-1}\left(\sum_{i=1}^na_{ii}\right)\lambda^{n-1}+\dots+\det(A)\nonumber\\
+          & = (-1)^n\lambda^n+(-1)^{n-1}\tr(A)\lambda^{n-1}+\dots+\det(A)\label{eq:8.1}\\
+          & = 0\nonumber
+      \end{align}
+      We can rewrite $\det(A-\lambda I)=0$ by its roots $\lambda_1,\dots,\lambda_n$ with the information of term $(-1)^n\lambda^n$.
+      \begin{align}
+        \det(A-\lambda I)
+          & = (\lambda_1-\lambda)(\lambda_2-\lambda)\dots(\lambda_n-\lambda)\nonumber\\
+          & = (-1)^n\lambda^n+(-1)^{n-1}\left(\sum_{i=1}^n\lambda_i\right)\lambda^{n-1}+\dots+\prod_{i=1}^n\lambda_i\label{eq:8.2}
+      \end{align}
+      Compare \eqref{eq:8.1} with \eqref{eq:8.2}, we know that $\tr(A)=\sum_{i=1}^n\lambda_i$.      
+    \item Separate the proof into two parts.
+      \begin{enumerate}[label=(\roman*)]
+        \item Proposition of $\rightarrow$\\
+          Choose $x$ to be eigenvectors of $A$, \ie $v_i, i=1,2,\dots,n$\\
+          Then $Av_i=\lambda_iv_i$ holds where $\lambda_i$ represents corresponding eigenvalue
+          \begin{align*}
+            x^TAx=v_i^TAv_i=v_i^T\lambda_iv_i=\lambda_i\|v_i\|_2^2\ge 0 \Rightarrow \lambda_i \ge 0
+          \end{align*}
+          $x^TAx\ge 0$ for any $x\in\R^n\Rightarrow\lambda_i\ge 0$ for $i=1,\dots,n$.
+        \item Proposition of $\leftarrow$\\
+          Let $y=Q^Tx$, \ie $x=Qy$
+          \begin{align*}
+            x^TAx=(Qy)^TA(Qy)=y^TQ^TQ\Lambda Q^TQy=y^T\Lambda y=\sum_{i=1}^n\lambda_iy_i^2
+          \end{align*}
+          We know that all $\lambda_i\ge 0$; therefore, $x^TAx\ge 0$\\
+          $x^TAx\ge 0$ for any $x\in\R^n\Leftarrow\lambda_i\ge 0$ for $i=1,\dots,n$.
+        \item From (i) and (ii), we get\\
+        $x^TAx\ge 0$ for any $x\in\R^n\Leftrightarrow\lambda_i\ge 0$ for $i=1,\dots,n$.
+      \end{enumerate}
+\newpage
+    \item Separate the proof into two parts. Similar to (b)(ii), let $y=Q^Tx$, \ie $x=Qy$.
+      \begin{enumerate}[label=(\roman*)]
+        \item $\lambda_{\min}x^Tx\le x^TAx$
+          \begin{align*}
+            x^TAx &= (Qy)^TA(Qy)=y^TQ^TQ\Lambda Q^TQy=y^T\Lambda y=\sum_{i=1}^n\lambda_iy_i^2\\
+            \lambda_{\min}x^Tx &=\lambda_{\min}(Qy)^T(Qy)=\lambda_{\min}y^TQ^TQy=\lambda_{\min}y^Ty=\lambda_{\min}\sum_{i=1}^ny_i^2
+          \end{align*}
+          It is easy to show that $\lambda_{\min}\sum_{i=1}^ny_i^2\le\sum_{i=1}^n\lambda_iy_i^2\Rightarrow\lambda_{\min}x^Tx\le x^TAx$.
+        \item $x^TAx\le \lambda_{\max}x^Tx$
+          \begin{align*}
+            \lambda_{\max}x^Tx =\lambda_{\max}(Qy)^T(Qy)=\lambda_{\max}y^TQ^TQy=\lambda_{\max}y^Ty=\lambda_{\max}\sum_{i=1}^ny_i^2
+          \end{align*}
+          Similar to (i), $\sum_{i=1}^n\lambda_iy_i^2\le\lambda_{\max}\sum_{i=1}^ny_i^2\Rightarrow x^TAx\le \lambda_{\max}x^Tx$.
+        \item From (i) and (ii), we get $\lambda_{\min}x^Tx\le x^TAx\le \lambda_{\max}x^Tx$.\qedhere      
+      \end{enumerate}
+  \end{enumerate}
+\end{proof}
+
+\end{document}

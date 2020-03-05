@@ -1,0 +1,346 @@
+\chapter{Equality constrained minimization}
+
+% 10.1
+\section{Equality constrained minimization problems}
+Consider a convex optimization problem with equality constraints
+\begin{align}
+  \text{minimize\;\;}\quad& f(x)\nonumber\\
+  \text{subject to}  \quad& Ax=b\label{eq:10.1}
+\end{align}
+where $f:\R^n\rightarrow\R$ is convex and twice continuously differentiable, and $A\in\R^{p\times n}$ with $\rank A=p<n$.
+This means that there are fewer equality constraints than variables, and the equality constraints are independent.\par
+Recall (from \textcolor{red}{\S4.2.3} or \S\ref{subsec:5.5.3}) that a point $x^\ast\in\dom f$ is optimal for \eqref{eq:10.1} if and only if there is a $\nu^\ast\in\R^p$ such that
+\begin{align}
+  Ax^\ast=b,\quad\nabla f(x^\ast)+A^T\nu^\ast=0\label{eq:10.2}
+\end{align}
+\begin{itemize}
+  \item \eqref{eq:10.1} is equivalent to \eqref{eq:10.2} which is a set of $n+p$ equations in the $n+p$ variables
+  \item the first set are called the \textit{primal feasibility equations} which is linear
+  \item the second set are called the \textit{dual feasibility equations} which is in general nonlinear
+\end{itemize}
+
+A special case to solve \eqref{eq:10.2} is described in \S\ref{subsec:10.1.1}, and the elimination and dual methods are described in \S\ref{subsec:10.1.2} and \S\ref{subsec:10.1.3}.
+
+% 10.1.1
+\subsection{Equality constrained convex quadratic minimization}
+\label{subsec:10.1.1}
+Consider
+\begin{align}
+  \text{minimize\;\;}\quad& f(x)=(1/2)x^TPx+q^Tx+r \label{eq:10.3}\\
+  \text{subject to}  \quad& Ax=b\nonumber
+\end{align}
+where $P\in\symm_+^n$ and $A\in\R^{p\times n}$. The KKT conditions are
+\begin{align}
+  \begin{bmatrix}
+    P&A^T\\A&0
+  \end{bmatrix}
+  \begin{bmatrix}
+    x^\ast\\\nu^\ast
+  \end{bmatrix}=
+  \begin{bmatrix}
+    -q\\b
+  \end{bmatrix}\label{eq:10.4}
+\end{align}
+\begin{itemize}
+  \item this set is called the \textit{KKT system} for the problem \eqref{eq:10.3}
+  \item the coefficient matrix is called the \textit{KKT matrix}
+  \item if KKT matrix is nonsingular, then there is a unique optimal $(x^\ast,\nu^\ast)$
+  \item if KKT matrix is singular and KKT system is solvable, then any solution yields an optimal $(x^\ast,\nu^\ast)$
+  \item if KKT matrix is singular and KKT system is unsolvable, then the problem is unbounded below or infeasible
+\end{itemize}
+In the last case there exist $v\in\R^n$ and $w\in\R^p$ such that
+\begin{align*}
+  Pv+A^Tw=0,\quad Av=0,\quad -q^Tv+b^Tw>0
+\end{align*}
+Let $\hat{x}$ be any feasible point. The point $x=\hat{x}+tv$ is feasible for all $t$ and
+\begin{align*}
+  f(\hat{x}+tv) &= f(\hat{x})+t(v^TP\hat{x}+q^Tv)+(1/2)t^2v^TPv\\
+                &= f(\hat{x})+t(-\hat{x}^TA^Tw+q^Tv)-(1/2)t^2w^TAv\\
+                &= f(\hat{x})+t(-b^Tw+q^Tv)
+\end{align*}
+which decreases without bound as $t\rightarrow\infty$.
+
+\subsubsection{Nonsingularity of the KKT matrix}
+There are several conditions equivalent to nonsingularity of the KKT matrix
+\begin{itemize}
+  \item $\nullspace(P)\cap\nullspace(A)=\{0\}$, \ie $P$ and $A$ have no nontrivial common nullspace
+  \item $Ax=0,\;x\neq 0\Rightarrow x^TPx>0$, \ie $P$ is positive definite on the nullspace of $A$
+  \item $F^TPF\succ 0$ where $F\in\R^{n\times (n-p)}$ is a matrix for which $\range(F)=\nullspace(A)$
+\end{itemize}
+An important special case: if $P\succ 0$, then the KKT matrix must be nonsingular.
+
+% 10.1.2
+\subsection{Eliminating equality constraints}
+\label{subsec:10.1.2}
+
+% 10.1.3
+\subsection{Solving equality constrained problems via the dual}
+\label{subsec:10.1.3}
+
+% 10.2
+\section{Newton's method with equality constraints}
+The initial point must be feasible (\ie satisfy $x\in\dom f$ and $Ax=b$), and the definition of Newton step is modified to take the equality constraints into account.
+In particular, the Newton step $\Delta x_{nt}$ is a feasible direction, \ie $A\Delta x_{nt}=0$.
+
+% 10.2.1
+\subsection{The Newton step}
+\subsubsection{Definition via second-order approximation}
+We replace the objective with its second-order Taylor approximation near $x$
+\begin{align}
+  \text{minimize\;\;}\quad& \hat{f}(x+v)=f(x)+\nabla f(x)^Tv+(1/2)v^T\nabla^2f(x)v\label{eq:10.10}\\
+  \text{subject to}  \quad& A(x+v)=b\nonumber
+\end{align}
+with variable $v$.
+This is a convex quadratic minimization problem with equality constraints.
+We define $\Delta x_{nt}$ is the solution, and assume the KKT matrix is nonsingular.
+From \S\ref{subsec:10.1.1} we know the Newton step $\Delta x_{nt}$ is characterized by
+\begin{align}
+  \begin{bmatrix}
+    \nabla^2f(x)&A^T\\A&0
+  \end{bmatrix}
+  \begin{bmatrix}
+    \Delta x_{nt}\\w
+  \end{bmatrix}=
+  \begin{bmatrix}
+    -\nabla f(x)\\0
+  \end{bmatrix}\label{eq:10.11}
+\end{align}
+where $w$ is the associated optimal dual variable.
+\begin{itemize}
+  \item when $f$ is exactly quadratic, the Newton update $x+\Delta x_{nt}$ exactly solves the equality constrained minimization problem
+  \item in the unconstrained case, when $f$ is nearly quadratic, $x+\Delta x_{nt}$ should be a good estimate of $x^\ast$
+\end{itemize}
+
+\subsubsection{Solution of linearized optimality conditions}
+The Newton step $\Delta x_{nt}$ and the vector $w$ can be interpreted as the solutions of a linearized approximation of the optimality conditions
+\begin{align*}
+  Ax^\ast=b,\quad\nabla f(x^\ast)+A^T\nu^\ast=0
+\end{align*}
+Let $x^\ast=x+\Delta x_{nt}$, $\nu^\ast=w$, replace $\nabla f$ by its linearized approximation near $x$, and using $Ax=b$.
+We can get the equations \eqref{eq:10.11}.
+
+\subsubsection{The Newton decrement}
+The Newton decrement is
+\begin{align}
+  \lambda(x)=(\Delta x_{nt}^T\nabla^2f(x)\Delta x_{nt})^{1/2}=\|\Delta x_{nt}\|_{\nabla^2f(x)}\label{eq:10.12}
+\end{align}
+Let $\hat{f}(x+v)$ be the second-order Taylor approximation of $f$ at $x$ as shown in \eqref{eq:10.10}, we have
+\begin{align}
+  f(x)-\inf\{\hat{f}(x+v)\mid A(x+v)=b\}=\lambda(x)^2/2
+\end{align}
+This means $\lambda(x)$ serves as the basis of a good stopping criterion.\par
+The Newton decrement comes up in the line search as well, since the directional derivative of $f$ in the direction $\Delta x_{nt}$ is
+\begin{align}
+  \frac{d}{dt}f(x+t\Delta x_{nt})\bigg|_{t=0}=\nabla f(x)^T\Delta x_{nt}=-\lambda(x)^2\label{eq:10.14}
+\end{align}
+as in the unconstrained one.
+
+\subsubsection{Feasible descent direction}
+\subsubsection{Affine invariance}
+
+% 10.2.2
+\subsection{Newton's method with equality constraints}
+The algorithm is the same as unconstrained problem
+\begin{algorithm}[\textit{Newton's method for equality constrained minimization}]
+  $ $\\
+  \textbf{given} a starting point $x\in\dom f$ with $Ax=b$, tolerance $\epsilon>0$.\\
+  \textbf{repeat}
+  \begin{enumerate}
+    \item \textit{Compute the Newton step and decrement.}
+    \begin{align*}
+      \Delta x_{\text{nt}}:=-\nabla^2f(x)^{-1}\nabla f(x),\quad\lambda^2:=\nabla f(x)^T\nabla^2f(x)^{-1}\nabla f(x)
+    \end{align*}
+    \item \textit{Stopping criterion.} \textbf{quit} if $\lambda^2/2\le\epsilon$
+    \item \textit{Line search.} Use backtracking line search.
+    \item \textit{Update.} $x:=x+t\Delta x_{\text{nt}}$
+  \end{enumerate}
+\end{algorithm}
+The method is called a \textit{feasible descent method}, it requires that the KKT matrix be invertible at each $x$.
+
+% 10.2.3
+\subsection{Newtons method and elimination}
+
+% 10.2.4
+\subsection{Convergence analysis}
+
+% 10.3
+\section{Infeasible start Newton method}
+
+% 10.3.1
+\subsection{Newton step at infeasible points}
+Again start with the optimality conditions for the equality constrained problem
+\begin{align*}
+  Ax^\ast=b,\quad\nabla f(x^\ast)+A^T\nu^\ast=0
+\end{align*}
+Let $x\in\dom f$ denote the current point, which we do not assume to befeasible.
+The goal is to find $\Delta x$ such that $x+\Delta x\approx x^\ast$.
+We substitute $x+\Delta x$ for $x^\ast$ and $w$ for $\nu^\ast$, and use the first-order approximation.
+\begin{align*}
+  \nabla f(x+\Delta x)\approx\nabla f(x)+\nabla^2 f(x)\Delta x
+\end{align*}
+to obtain
+\begin{align*}
+  A(x+\Delta x)=b,\quad\nabla f(x)+\nabla^2f(x)\Delta x+A^Tw=0
+\end{align*}
+Therefore, the set becomes
+\begin{align}
+  \begin{bmatrix}
+    \nabla^2f(x)&A^T\\A&0
+  \end{bmatrix}
+  \begin{bmatrix}
+    \Delta x\\w
+  \end{bmatrix}=-
+  \begin{bmatrix}
+    \nabla f(x)\\Ax-b
+  \end{bmatrix}\label{eq:10.19}
+\end{align}
+\begin{itemize}
+  \item $Ax-b$ is the residual vector for the linear equality constraints which vanishes when $x$ is feasible, \ie \eqref{eq:10.11}
+  \item if $x$ is feasible, then $\Delta x=\Delta x_{nt}$ with no confusion
+\end{itemize}
+
+\subsubsection{Interpretation as primal-dual Newton step}
+We update both primal variable and dual variable in order to (approximately) satisfy the optimality conditions.
+We express optimality as $r(x^\ast,\nu^\ast)=0$
+\begin{align*}
+  r(x,\nu)&=(r_{dual}(x,\nu),r_{pri}(x,\nu))\\
+  r_{dual}(x,\nu)&=\nabla f(x)+A^T\nu\\
+  r_{pri}(x,\nu)&=Ax-b
+\end{align*}
+where $r:\R^n\times\R^p\rightarrow\R^n\times\R^p$, $r_{dual}$ is called \textit{dual residual}, and $r_{pri}$ is called \textit{primal residual}.
+The first-order Taylor approximation of $r$ near current estimate $y$ is
+\begin{align*}
+  r(y+z)\approx\hat{r}(y+z)=r(y)+Dr(y)z
+\end{align*}
+where $Dr(y)\in\R^{(n+p)\times(n+p)}$ is the derivative of $r$.
+We define the primal-dual Newton step $\Delta y_{pd}$ as the step $z$ for which $\hat{r}(y+z)$ vanishes, \ie
+\begin{align}
+  Dr(y)\Delta y_{pd}=-r(y)\label{eq:10.20}
+\end{align}
+where $\Delta y_{pd}=(\Delta x_{pd},\Delta \nu_{pd})$. Then express \eqref{eq:10.20} as
+\begin{align}
+  \begin{bmatrix}
+    \nabla^2f(x)&A^T\\A&0
+  \end{bmatrix}
+  \begin{bmatrix}
+    \Delta x_{pd}\\\Delta\nu_{pd}
+  \end{bmatrix}=-
+  \begin{bmatrix}
+    r_{dual}\\r_{pri}
+  \end{bmatrix}=-
+  \begin{bmatrix}
+    \nabla f(x)+A^T\nu\\Ax-b
+  \end{bmatrix}\label{eq:10.21}
+\end{align}
+\ie
+\begin{align}
+  \begin{bmatrix}
+    \nabla^2f(x)&A^T\\A&0
+  \end{bmatrix}
+  \begin{bmatrix}
+    \Delta x_{pd}\\\nu^+
+  \end{bmatrix}=-
+  \begin{bmatrix}
+    \nabla f(x)\\Ax-b
+  \end{bmatrix}\label{eq:10.22}
+\end{align}
+where $\nu^{+}=\nu+\Delta\nu_{pd}$.
+\begin{itemize}
+  \item \eqref{eq:10.21} and \eqref{eq:10.22} are the same as \eqref{eq:10.19} with the relation
+        \begin{align*}
+          \Delta x_{nt}=\Delta x_{pd},\quad w=\nu^+=\nu+\Delta\nu_{pd}
+        \end{align*}
+        The (infeasible) Newton step is the same as the primal part of the primal-dual step, and the associated dual vector $w$ is the updated primal-dual variable $\nu^+$.
+  \item \eqref{eq:10.21} shows that the Newton step and the associated dual step are obtained by solving a set of equations with residuals as the righthand side.
+  \item \eqref{eq:10.22} shows that how we originally defined the Newton step, gives the Newton step and the updated dual variable. The current value of the dual variable is not needed to compute the primal step, or the updated value of the dual variable.
+\end{itemize}
+
+\subsubsection{Residual norm reduction property}
+The Newton direction at an infeasible point is not necessarily a descent direction
+\begin{align*}
+  \frac{d}{dt}f(x+t\Delta x)\bigg|_{t=0}
+    &= \nabla f(x)^T\Delta x\\
+    &= -\Delta x^T\nabla^2f(x)\Delta x+(Ax-b)^Tw
+\end{align*}
+which is not necessarily negative (unless $x$ is feasible, \ie $Ax=b$).
+The primal-dual interpretation shows that the norm of the residual decreases in the Newton direction, \ie
+\begin{align*}
+  \frac{d}{dt}\|r(y+t\Delta y_{pd})\|_2^2\bigg|_{t=0}=2r(y)^TDr(y)\Delta y_{pd}=-2r(y)^Tr(y)<0
+\end{align*}
+Take the derivative of the square, we have
+\begin{align}
+  \frac{d}{dt}\|r(y+t\Delta y_{pd})\|_2\bigg|_{t=0}=-\|r(y)\|_2\label{eq:10.23}
+\end{align}
+Therefore $\|r\|_2$ can be used to measure the progress of the infeasible start Newton method.
+
+\subsubsection{Full step feasibility property}
+The Newton step in \eqref{eq:10.19} has the property
+\begin{align}
+  A(x+\Delta x_{nt})=b\label{eq:10.24}
+\end{align}
+It follows that, if a step length of one is taken using the Newton step, the following iterates will be feasible.
+More generally, with a step length $t\in[0,1]$, the next iterate of equality residual $r_{pri}$ is
+\begin{align*}
+  r_{pri}^+=A(x+\Delta x_{nt}t)-b=(1-t)(Ax-b)=(1-t)r_{pri}
+\end{align*}
+using \eqref{eq:10.24}. Therefore, we have
+\begin{align*}
+  r^{(k)}=\left(\prod_{i=0}^{k-1}(1-t^{(i)})\right)r^{(0)}
+\end{align*}
+where $r^{(i)}=Ax^{(i)}-b$ is the residual of $x^{(i)}\in\dom f$, and $t^{(i)}\in[0,1]$.
+\begin{itemize}
+  \item the primal residual at each step is in the direction of the initial primal residual, and is scaled down at each step.
+  \item once a full step ($t^{(i)}=1$) is taken, all future iterates are primal feasible
+\end{itemize}
+
+% 10.3.2
+\subsection{Infeasible start Newton method}
+The extension of Newton's method, with $x^{(0)}\in\dom f$, $\Delta\nu_{nt}=\Delta\nu_{pd}=w-\nu$
+\begin{algorithm}[\textit{Infeasible start Newton method}]
+  $ $\\
+  \textbf{given} a starting point $x\in\dom f$, $\nu$, tolerance $\epsilon>0$, $\alpha\in(0,1/2)$, $\beta\in(0,1)$.\\
+  \textbf{repeat}
+  \begin{enumerate}
+    \item \textit{Compute primal and dual Newton steps $\Delta x_{nt}$ and $\Delta\nu_{nt}$.}
+    \item \textit{Backtracking line search on $\|r\|_2$.}
+      \begin{enumerate}
+        \item $t:=1$
+        \item \textbf{while} $\|r(x+t\Delta x_{nt},\nu+t\Delta\nu_{nt})\|_2>(1-\alpha t)\|r(x,\nu)\|_2,\;t:=\beta t$
+      \end{enumerate}
+    \item \textit{Update.} $x:=x+t\Delta x_{\text{nt}},\;\nu:=\nu+t\Delta \nu_{\text{nt}}$
+  \end{enumerate}
+  \textbf{until} $Ax=b$ and $\|r(x,\nu)\|_2\le\epsilon$
+\end{algorithm}
+The difference between this algorithm and the standard Newton method are
+\begin{itemize}
+  \item the search direction include the extra correction terms (primal residual)
+  \item the line search is carried out using the norm of the residual
+  \item the algorithm terminates when primal feasibility has been achieved, and the norm of the (dual) residual is small
+\end{itemize}
+There are some properties here
+\begin{itemize}
+  \item the line search must terminate in a finite number of steps since \eqref{eq:10.23} shows that the exit condition is satisfied for small $t$
+  \item once the step length is chosen to be one, the following search direction coincides with the one for the (feasible) Newton method
+  \item another variation is to switch to the (feasible) Newton method once feasibility is achieved, \ie change line search and exit condition
+\end{itemize}
+
+% 10.3.3
+\subsection{Convergence analysis}
+
+% 10.3.4
+\subsection{Convex-concave games}
+
+% 10.3.5
+\subsection{Examples}
+
+% 10.4
+\section{Implementation}
+
+% 10.4.1
+\subsection{Elimination}
+
+% 10.4.2
+\subsection{Solving KKT systems}
+
+% 10.4.3
+\subsection{Examples}

@@ -1,0 +1,200 @@
+\chapter{Convex sets}
+
+% 2.1
+\section{Affine and convex sets}
+
+% 2.1.1
+\subsection{Lines and line segments}
+A \textit{line} passing through $x_1$ and $x_2$ on $\R^n$ ($x_1\ne x_2$) has the form
+\begin{align*}
+  y &= \theta x_1+(1-\theta)x_2\\
+    &= x_2+\theta(x_1-x_2)
+\end{align*}
+It becomes \textit{line segment} when $0\le\theta\le1$
+
+% 2.1.2
+\subsection{Affine sets}
+Set $C\subseteq\R^n$ is \textit{affine} if the line through any two distinct points in $C$ lies in $C$, \ie\\
+for any $x_1, x_2\in C$ and $\theta\in\R$, we have $\theta x_1+(1-\theta)x_2\in C$\\
+The \textit{affine combination} of $x_1,\dots,x_k$ is
+\begin{align*}
+  \theta_1x_1+\theta_2x_2+\dots+\theta_kx_k\quad\text{where}\quad\theta_1+\theta_2+\dots+\theta_k=1
+\end{align*}
+If $C\subseteq \R^n$ is affine and $x_1,\dots,x_k\in C$, then the affine combination of $x_1,\dots,x_k$ is in $C$.
+This property can be proved by induction.\par
+If $C$ is affine and $x_0\in C$, then $V=C-x_0=\{x-x_0\mid x\in C\}$ is a subspace.
+\begin{proof}
+  let $v_1=x_1-x_0\in V$ and $v_2=x_2-x_0\in V$
+  \begin{align*}
+    \alpha v_1+\beta v_2
+      &= \alpha (x_1-x_0)+\beta (x_2-x_0)\\
+      &= \alpha x_1+\beta x_2+(1-\alpha-\beta)x_0-x_0\in V
+  \end{align*}
+  since $\alpha x_1+\beta x_2+(1-\alpha-\beta)x_0\in C$.
+  Therefore, $V$ is a subspace.
+\end{proof}
+\begin{itemize}
+  \item subspace $V$ associated with an affine set $C$ does not depend on choice of $x_0$
+  \item definition of the \textit{dimension} of an affine set $C$ is the dimension of subspace $V=C-x_0$
+\end{itemize}
+\begin{example}[\textit{Solution set of linear equations}]
+  The solution set of $C=\{x\mid Ax=b\}$ is an affine set. Let $x_1,x_2\in C$, then $Ax_1=A_2=b$
+  \begin{align*}
+    A(\theta x_1+(1-\theta)x_2)=\theta Ax_1+(1-\theta)Ax_2=b
+  \end{align*}
+  \begin{itemize}
+    \item the subspace associated with the affine set $C$ is the nullspace of $A$
+    \item converse: every affine set can be expressed as the solution set of a system of linear equations
+  \end{itemize}
+\end{example}
+The \textit{affine hull} of $C$ is the set of all affine combinations
+\begin{align*}
+  \aff C=\{\theta_1x_1+\cdots+\theta_kx_k\mid x_1,\dots,x_k\in C,\;\sum_{i=1}^k\theta_i=1\}
+\end{align*}
+\begin{itemize}
+  \item affine hull is the smallest affine set that contains $C$
+  \item if $S$ is affine set with $C\subseteq S$, then $\aff C\subseteq S$
+\end{itemize}
+
+% 2.1.3
+\subsection{Affine dimension and relative interior}
+\begin{example}
+\end{example}
+
+% 2.1.4
+\subsection{Convex sets}
+
+% 2.1.5
+\subsection{Cones}
+
+% 2.2
+\section{Some important examples}
+
+% 2.2.1
+\subsection{Hyperplanes and halfspaces}
+
+% 2.2.2
+\subsection{Euclidean balls and ellipsoids}
+
+% 2.2.3
+\subsection{Norm balls and norm cones}
+\begin{example}[\textit{Second-order cone}]
+\end{example}
+
+% 2.2.4
+\subsection{Polyhedra}
+\begin{example}[\textit{Nonnegative orthant}]
+\end{example}
+\begin{example}[\textit{Some common simplexes}]
+\end{example}
+
+% 2.2.5
+\subsection{The positive semidefinite cone}
+\begin{example}[\textit{Positive semidefinite cone in $\symm^2$}]
+\end{example}
+
+% 2.3
+\section{Operations that preserve convexity}
+
+% 2.3.1
+\subsection{Intersection}
+\begin{example}
+\end{example}
+\begin{example}
+\end{example}
+
+% 2.3.2
+\subsection{Affine functions}
+\begin{example}[\textit{Polyhedron}]
+\end{example}
+\begin{example}[\textit{Solution set of linear matrix inequality}]
+\end{example}
+\begin{example}[\textit{Hyperbolic cone}]
+\end{example}
+\begin{example}[\textit{Ellipsoid}]
+\end{example}
+
+% 2.3.3
+\subsection{Linear-fractional and perspective functions}
+\begin{remark}
+\end{remark}
+\begin{remark}
+\end{remark}
+\begin{example}[\textit{Conditional probabilities}]
+\end{example}
+
+% 2.4
+\section{Generalized inequalities}
+
+% 2.4.1
+\subsection{Proper cones and generalized inequalities}
+\begin{example}[\textit{Nonnegative orthant and componentwise inequality}]
+\end{example}
+\begin{example}[\textit{Positive semidefinite cone and matrix inequality}]
+\end{example}
+\begin{example}[\textit{Cone of polynomials nonegative on $[0,1]$}]
+\end{example}
+
+% 2.4.2
+\subsection{Minimum and minimal elements}
+\begin{example}
+\end{example}
+\begin{example}[\textit{Minimum and minimal elements of a set of symmetric matrices}]
+\end{example}
+
+% 2.5
+\section{Separating and supporting hyperplanes}
+
+% 2.5.1
+\subsection{Separating hyperplane theorem}
+\begin{example}[\textit{Separation of an affine and a convex set}]
+\end{example}
+\begin{example}[\textit{Strict separation of a point and a closed convex set}]
+\end{example}
+\begin{example}[\textit{Theorem of alternatives for strict linear inequalities}]
+\end{example}
+
+% 2.5.2
+\subsection{Supporting hyperplanes}
+
+% 2.6
+\section{Dual cones and generalized inequalities}
+
+% 2.6.1
+\subsection{Dual cones}
+The \textit{dual cone} of a cone $K$ is defined by
+\begin{align}
+  K^\ast=\{y\mid x^Ty\ge 0,\;\forall x\in K\}
+\end{align}
+\begin{itemize}
+  \item dual cone is a cone
+  \item dual cone is always convex (even if origin cone is not)
+  \item $y\in K^\ast$ if and only if $-y$ is the normal of a hyperplane supports $K$ at the origin
+\end{itemize}
+\begin{example}[\textit{Subspace}]
+  The dual cone of a subspace $V\subseteq \R^n$ is its orthogonal complement $V^\perp=\{y\mid y^Tv=0,\;\forall v\in V\}.$
+  \begin{proof}
+    $ $
+    \begin{enumerate}[label=(\roman*)]
+      \item trivially, $V^\perp\subseteq V^\ast$
+      \item start here
+    \end{enumerate}
+  \end{proof}
+\end{example}
+\begin{example}[\textit{Nonnegative orthant}]
+
+\end{example}
+\begin{example}[\textit{Positive semidefinite cone}]
+\end{example}
+\begin{example}[\textit{Dual of a norm cone}]
+\end{example}
+
+% 2.6.2
+\subsection{Dual generalized inequalities}
+\begin{example}[\textit{Theorem of alternatives for linear strict generalized inequalities}]
+\end{example}
+
+% 2.6.3
+\subsection{Minimum and minimal elements via dual inequalities}
+\begin{example}[\textit{Pareto optimal production frontier}]
+\end{example}

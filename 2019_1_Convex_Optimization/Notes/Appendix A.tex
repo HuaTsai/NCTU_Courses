@@ -1,0 +1,106 @@
+\chapter{Mathematical background}
+
+\section{Norms}
+
+\subsection{Inner product, Euclidean norm, and angle}
+Define \textit{standard inner product} on $\R^n$ by
+\begin{align*}
+  \<x,y\>=x^Ty=\sum_{i=1}^nx_iy_i
+\end{align*}
+Define \textit{Euclidean norm}, $\ell_2$-norm on $x\in\R^n$ by
+\begin{align}
+  \|x\|_2=(x^Tx)^{1/2}=(x_1^2+\dots+x_n^2)^{1/2}
+\end{align}
+The \textit{Cauchy-Schwartz inequality}
+\begin{align*}
+  |x^Ty|\le \|x\|_2\|y\|_2
+\end{align*}
+Define \textit{standard inner product} on $\R^{m\times n}$
+\begin{align*}
+  \<X,Y\>=\tr(X^TY)=\sum_{i=1}^m\sum_{j=1}^nX_{ij}Y_{ij}
+\end{align*}
+
+\subsection{Norms, distance, and unit ball}
+A function $f:\R^n\rightarrow\R$ with $\dom f=\R^n$ is a norm if
+\begin{itemize}
+  \item $f$ is nonnegative: $f(x)\ge 0\quad\forall x\in R^n$
+  \item $f$ is definite: $x=0 \Rightarrow f(x)=0$
+  \item $f$ is homogeneous: $f(tx)=|t|f(x),\quad\forall x\in\R^n$ and $t\in\R$
+  \item $f$ satisfies the triangle inequality: $f(x+y)\le f(x)+f(y), \quad\forall x, y \in \R^n$
+\end{itemize}
+
+\subsection{Examples}
+
+Define \textit{Chebyshev norm}, $\ell_\infty$-norm by
+\begin{align*}
+  \|x\|_\infty=max\{|x_1|,\dots.|x_n|\}
+\end{align*}
+
+\subsection{Equivalence of norms}
+
+\subsection{Operator norms}
+Suppose $\|\cdot\|_a$ and $\|\cdot\|_b$ are norms on $\R^m$ and $\R^n$.
+Define \textit{operator norm} of $X\in\R^{m\times n}$, induced by $\|\cdot\|_a$ and $\|\cdot\|_b$, as
+\begin{align*}
+  \|X\|_{a,b}=\sup\{\|Xu\|_a\mid\|u\|_b\le 1\}.
+\end{align*}
+The \textit{spectral norm}/$\ell_2$\textit{-norm} of $X$ is its \textit{maximum singular value}
+\begin{align*}
+  \|X\|_2=\sigma_\text{max}(X)=(\lambda_\text{max}(X^TX))^{1/2}.
+\end{align*}
+The $\ell_\infty$\textit{-norm} of $X$ is the \textit{max-row-sum norm}
+\begin{align*}
+  \|X\|_\infty=\sup\{\|Xu\|_\infty\mid\|u\|_\infty\le 1\}=\max_{i=1,\dots,m}\sum_{j=1}^n|X_{ij}|.
+\end{align*}
+The $\ell_1$\textit{-norm} of $X$ is the \textit{max-column-sum norm}
+\begin{align*}
+  \|X\|_1=\max_{j=1,\dots,n}\sum_{i=1}^m|X_{ij}|.
+\end{align*}
+
+\subsection{Dual norm}
+Let $\|\cdot\|$ be a norm on $\R^n$, then the associated \textit{dual norm} is
+\begin{align*}
+  \|z\|_\ast=\sup\{z^Tx\mid\|x\|\le 1\}
+\end{align*}
+
+\section{Analysis}
+
+\subsection{Open and closed sets}
+
+\subsection{Supremum and infimum}
+
+\section{Functions}
+
+\subsection{Function notation}
+
+
+\subsection{Continuity}
+
+\subsection{Closed functions}
+
+
+\section{Derivatives}
+
+
+\subsection{Derivative and gradient}
+
+\subsection{Chain rule}
+
+\subsection{Second derivative}
+
+
+
+\subsection{Chain rule for second derivative}
+
+\section{Linear algebra}
+
+\subsection{Range and nullspace}
+
+\subsection{Symmetric eigenvalue decomposition}
+
+
+\subsection{Generalized eigenvalue decomposition}
+
+\subsection{Singular value decomposition}
+
+\subsection{Schur complement}

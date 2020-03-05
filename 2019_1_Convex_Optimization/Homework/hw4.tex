@@ -1,0 +1,205 @@
+%!TEX program = pdflatex
+\documentclass[12pt]{extarticle}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage{mdframed}
+\usepackage{blindtext}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue
+}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\everymath{\displaystyle}
+
+\input{../defs.tex}
+
+\title{Assignment \#4}
+\author{Shao Hua, Huang 0750727\\
+ECM5901 - Optimization Theory and Application}
+\begin{document}
+\maketitle
+
+% Exercise 1
+\begin{exercise}
+  For a subspace $V$ of $\R^n$, its orthogonal complement, denoted by $V^\perp$, is defined as $V^\perp=\{x\mid \<x,z\>=0\;\text{for all}\;z\in V\}$.
+  Suppose that $A\in\R^{m\times n}$. Show that
+  \begin{align*}
+    \nullspace(A) = (\range(A^T))^\perp.
+  \end{align*}
+  where $\nullspace(A)$ is the null space of $A$ and $\range(A^T)$ is the range of $A^T$. (15\%)
+\end{exercise}
+\begin{proof}
+  The definition of range is $\range(A)=\{Ax\mid x\in\R^n\}$, and the definition of nullspace is $\nullspace(A)=\{x\in\R^n\mid Ax=0\}$.
+  Let $A=[a_1\;a_2\;\cdots\;a_m]^T$ where $a_i$ are row vectors of $A$, and $A^T=[a_1\;a_2\;\cdots\;a_m]$ where $a_i$ are column vectors of $A^T$.\par
+  Separate the proof into two parts.
+  \begin{enumerate}[label=(\roman*)]
+    \item $\nullspace(A)\subseteq (\range(A^T))^\perp$, \ie $v\in\nullspace(A)\Rightarrow v\in(\range(A^T))^\perp$
+          \begin{align*}
+            v\in\nullspace(A)&\Rightarrow Av=0\\
+                             &\Rightarrow a_i^Tv=0,\;i=1,\dots,m\\
+                             &\Rightarrow c_1a_1^Tv+c_2a_2^Tv+\cdots+c_ma_m^Tv=0\\
+                             &\Rightarrow w^Tv=0\quad\forall\;w=c_1a_1+c_2a_2+\cdots+c_ma_m=A^Tc\\
+                             &\Rightarrow w^Tv=0\quad\forall\;w\in\range(A^T)\\
+                             &\Rightarrow v\in(\range(A^T))^\perp
+          \end{align*}
+          where $c=(c_1,c_2,\dots,c_m)\in\R^m$
+    \item $\nullspace(A)\supseteq (\range(A^T))^\perp$, \ie $v\in(\range(A^T))^\perp\Rightarrow v\in\nullspace(A)$
+          \begin{align*}
+            v\in(\range(A^T))^\perp&\Rightarrow w^Tv=0\quad\forall\;w\in\range(A^T)\\
+                                   &\Rightarrow w^Tv=0\quad\forall\;w=A^Tc=c_1a_1+c_2a_2+\cdots+c_ma_m\\
+                                   &\Rightarrow a_i^Tv=0,\;i=1,\dots,m\\
+                                   &\Rightarrow Av=0
+          \end{align*}
+          where choose $c=e_1,e_2,\dots,e_m$
+    \item From (i) and (ii), we know that $\nullspace(A)=(\range(A^T))^\perp$\qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 2
+\begin{exercise}
+  Prove that $x^\ast=(1,1/2,-1)$ is optimal for the optimization problem
+  \begin{align*}
+    \text{minimize\;\;}\quad& f_0(x)=(1/2)x^TPx+q^Tx+r\\
+    \text{subject to}  \quad& -1\le x_i \le 1,\;i=1,2,3
+  \end{align*}
+  where
+  \begin{align*}
+    P= \begin{bmatrix}13&12&-2\\12&17&6\\-2&6&12\end{bmatrix},\;
+    q= \begin{bmatrix}-22\\-14.5\\13\end{bmatrix},\;
+    r= 1.
+  \end{align*}
+  (20\%)
+\end{exercise}
+\begin{proof}
+  First check whether $f_0(x)$ is convex. Since $f_0$ is twice differentiable and $P\in\symm^3$, \ie check $\nabla^2f_0(x)=P\succeq 0$.
+  After some calculations, eigenvalues of $P$ are $(\lambda_1,\lambda_2,\lambda_3)\approx(27.898,13.843,0.259)\succeq 0$.
+  Therefore, $P$ is positive semidefinite.\par
+  Since $f_0$ is convex and inequality constraint functions are convex (intersection of halfspaces), the original problem becomes a convex optimization problem.
+  Thus we can apply equation (4.21) in \S 4.2.3 to check whether $x^\ast=(1,1/2,-1)$ is optimal.
+  \begin{align}
+    \nabla f_0(x^\ast)^T(y-x^\ast) &=
+        \begin{bmatrix}-1&0&2\end{bmatrix}
+        \begin{bmatrix}y_1-1\\y_2-1/2\\y_3+1\end{bmatrix}\nonumber\\
+      &= -1(y_1-1)+2(y_3+1)\ge 0\label{eq:2.1}
+  \end{align}
+  Since inequality \eqref{eq:2.1} holds for all $y$ in the feasible set, $x^\ast$ is proved to be an optimal.
+\end{proof}
+
+% Exercise 3
+\begin{exercise}
+  Consider a problem of the form
+  \begin{align}
+    \text{minimize\;\;}\quad& f_0(x)/(c^Tx+d)\nonumber\\
+    \text{subject to}  \quad& f_i(x)\le 0,\;i=1,\dots,m\label{eq:3.1}\\
+                            & Ax=b\nonumber
+  \end{align}
+  where $f_0,f_1,\dots,f_m$ are convex, and the domain of the objective function is defined as $\{x\in\dom f_0\mid c^Tx+d>0\}$.
+  \begin{enumerate}[label=(\alph*)]
+    \item Show that the problem is equivalent to
+          \begin{align}
+            \text{minimize\;\;}\quad& g_0(y,t)\nonumber\\
+            \text{subject to}  \quad& g_i(y,t)\le 0,\;i=1,\dots,m\label{eq:3.2}\\
+                                    & Ay = bt\nonumber\\
+                                    & c^Ty+dt=1\nonumber
+          \end{align}
+          where $g_i$ is the perspective of $f_i$ (see \S 3.2.6).
+          The variables are $y\in\R^n$ and $t\in\R$. (15\%)
+    \item Show that this problem is convex. (10\%)
+  \end{enumerate}
+\end{exercise}
+\begin{proof}
+  We have $g_i(y,t)=tf_i(y/t)$ by definition of perspective function.
+  \begin{enumerate}[label=(\alph*)]
+    \item Separate the proof into two parts.
+      \begin{enumerate}[label=(\roman*)]
+        \item If $x$ is feasible in \eqref{eq:3.1}, then $(y, t)$ is feasible in \eqref{eq:3.2}.\\
+              Define $y=\frac{x}{c^Tx+d}$ and $t=\frac{1}{c^Tx+d}>0$ (since $x\in\dom f_0$), then
+              \begin{align*}
+                \begin{cases}
+                  (y,t)\in\dom g_i=\{(y,t)\mid y/t\in\dom f_i,\;t>0\},\;i=1,\dots,m\\
+                  g_i(y,t)=tf_i(y/t)=tf_i(x)\le 0,\;i=1,\dots,m\\
+                  Ay=\frac{Ax}{c^Tx+d}=\frac{b}{c^Tx+d}=bt\\
+                  c^Ty+dt=\frac{c^Tx+d}{c^Tx+d}=1
+                \end{cases}
+              \end{align*}
+              Thus $(y,t)$ is feasible with $g_0(y,t)=f_0(x)/(c^Tx+d)$.
+        \item If $(y, t)$ is feasible in \eqref{eq:3.2}, then $x$ is feasible in \eqref{eq:3.1}.\\
+              Define $x=y/t$ ($t>0$ by definition of the perspective function), then
+              \begin{align*}
+                \begin{cases}
+                  (y,t)\in\dom g_i=\{(y,t)\mid y/t\in\dom f_i,\;t>0\}\Rightarrow x\in\dom f_i,\;i=1,\dots,m\\
+                  f_i(x)=f_i(y/t)=g_i(y,t)/t\le 0,\;i=1,\dots,m\\
+                  Ax=\frac{Ay}{t}=b
+                \end{cases}
+              \end{align*}
+              Thus $x$ is feasible with $f_0(x)/(c^Tx+d)=g_0(y,t)/(c^Txt+dt)=g_0(y,t)$.
+        \item From (i) and (ii), we know that problem \eqref{eq:3.1} is equivalent to problem \eqref{eq:3.2}.
+      \end{enumerate}
+    \item As discussed in \S 3.2.6, the perspective operation preserves convexity, \ie $g_i(y,t)$ is convex since $f_i(x)$ is convex where $i=0,\dots,m$.
+          In conclusion, the problem \eqref{eq:3.2} have a convex objective function, $m$ convex inequality constraint functions, and the row mumber of $A$ plus $1$ affine equality constraint functions.
+          Therefore, \eqref{eq:3.2} is a convex optimization problem.\qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 4
+\begin{exercise}
+  (Network flow problem.) Consider a network of n nodes, with directed links connecting each pair of nodes.
+  The variables in the problem are the flows on each link: $x_{ij}$ will denote the flow from node $i$ to node $j$.
+  The cost of the flow along the link from node $i$ to node $j$ is given by $c_{ij}x_{ij}$, where $c_ij$ are given constants.
+  The total cost across the network is
+  \begin{align*}
+    C=\sum_{i,j=1}^nc_{ij}x_{ij}
+  \end{align*}
+  Each link flow $x_{ij}$ is also subject to a given lower bound $l_{ij}$ (usually assumed to be nonnegative) and an upper bound $u_{ij}$.
+  The external supply at node $i$ is given by $b_i$, where $b_i>0$ means an external flow enters the network at node $i$, and $b_i<0$ means that at node $i$, an amount $|b_i|$ flows out of the network.
+  We assume that $\sum_{i}b_i=0$, \ie the total external supply equals total external demand.
+  At each node we have conservation of flow: the total flow into node $i$ along links and the external supply, minus the total flow out along the links, equals zero.
+  The problem is to minimize the total cost of flow through the network, subject to the constraints described above.
+  Formulate this problem as a linear program. (20\%)
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  The problem can be formulated by linear programming
+  \begin{align*}
+    \text{minimize\;\;}\quad& C=\sum_{i,j=1}^nc_{ij}x_{ij}\\
+    \text{subject to}  \quad& b_i+\sum_{j=1}^nx_{ji}-\sum_{j=1}^nx_{ij}=0,\;i=1,\dots,n\\
+                            & l_{ij}\le x_{ij}\le u_{ij}
+  \end{align*}
+\end{proof}
+
+% Exercise 5
+\begin{exercise}
+  Give an explicit solution of the following \textbf{QCQP}s. (Minimizing a linear function over an ellipsoid)
+  \begin{align*}
+    \text{minimize\;\;}\quad& c^Tx\\
+    \text{subject to}  \quad& (x-x_c)^TA(x-x_c)\le 1
+  \end{align*}
+  where $A\in\symm_{++}^n$ and $c\neq 0$. (20\%)
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  Let $y=A^{1/2}(x-x_c)$, \ie $x=A^{-1/2}y+x_c$, then the problem becomes
+  \begin{align*}
+    \text{minimize\;\;}\quad& f_0(x)=c^TA^{-1/2}y+c^Tx_c\\
+    \text{subject to}  \quad& y^Ty\le 1
+  \end{align*}
+  We have $\nabla f_0(x)=A^{1/2}c$, and the solution is $y^\ast=-\frac{A^{1/2}c}{\|A^{1/2}c\|_2}$, \ie
+  \begin{align*}
+    x^\ast=x_c-\frac{A^{-1}}{\|A^{1/2}c\|_2}c
+  \end{align*}
+\end{proof}
+
+\end{document}

@@ -1,0 +1,52 @@
+%!TEX program = pdflatex
+\documentclass[12pt]{extarticle}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage[top=1in,bottom=1in,left=1in,right=1in]{geometry}
+\usepackage{mdframed}
+\usepackage{blindtext}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\everymath{\displaystyle}
+
+\input{../defs.tex}
+
+\title{Assignment Sample}
+\author{Shao Hua, Huang 0750727\\
+ECM5901 - Optimization Theory and Application}
+\begin{document}
+\maketitle
+
+% Exercise 1
+\begin{exercise}
+  \blindtext
+\end{exercise}
+\begin{proof}
+  $ $
+  \begin{enumerate}[label=(\alph*)]
+    \item prove a
+    \item prove b\qedhere
+  \end{enumerate}
+\end{proof}
+
+% Exercise 2
+\begin{exercise}
+  \blindtext
+\end{exercise}
+\begin{proof}[Solution]
+  \let\qed\relax
+  \blindmathtrue
+  \blindmathpaper
+\end{proof}
+
+\end{document}
