@@ -79,7 +79,7 @@ int ReadCommand(char *buf, Command *cmd) {
 
 /**
  * Break Command
- * \praam pg program
+ * \param pg program
  * \param id breakpoint id
  * \param addr elf file when loaded or memory layout address when running
  */
